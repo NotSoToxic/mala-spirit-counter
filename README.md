@@ -4,7 +4,7 @@ Lovable Prompt: Mala Jaap Counter App
 
 Copy everything below into Lovable.
 
-Build a beautiful, spiritual Mala Jaap Counter web app (installable as a PWA on Android and iOS via "Add to Home Screen"). No login, no accounts, no backend — everything is stored locally on the device using localStorage. Simple install-and-use experience.
+Build a beautiful, spiritual Mala Jaap Counter web app (installable as a PWA on Android and iOS via "Add to Home Screen"). No login, no accounts, no backend - everything is stored locally on the device using localStorage. Simple install-and-use experience.
 
 Core Functionality
 
@@ -18,7 +18,7 @@ When the count reaches 108, trigger a celebratory completion animation (glow bur
 
 Automatically start a new round: increment "Total Malas Completed" by 1, reset the current bead count to 0, and continue.
 
-Volume button support (best effort): If technically feasible within a PWA/Capacitor wrapper, also let hardware volume-up increment and volume-down decrement the count. If this isn't reliably achievable in a browser/PWA context, skip it gracefully and rely on tap — don't break the core experience trying to force it.
+Volume button support (best effort): If technically feasible within a PWA/Capacitor wrapper, also let hardware volume-up increment and volume-down decrement the count. If this isn't reliably achievable in a browser/PWA context, skip it gracefully and rely on tap - don't break the core experience trying to force it.
 
 Persistence: Store and restore across sessions (localStorage):
 
@@ -42,7 +42,7 @@ Screens
 
 1. Main Counter Screen (home)
 
-Large circular bead/mala graphic in the center — tapping it is the primary counter action.
+Large circular bead/mala graphic in the center - tapping it is the primary counter action.
 
 A thin circular progress ring around the bead fills up as count approaches 108.
 
@@ -60,7 +60,7 @@ Calendar-style or list-style view of daily jaap/mala counts.
 
 Lifetime totals: total jaaps, total malas, current streak, longest streak.
 
-Clean charts or progress bars (simple, not overly technical-looking — keep the spiritual tone).
+Clean charts or progress bars (simple, not overly technical-looking - keep the spiritual tone).
 
 3. Settings Screen
 
@@ -74,15 +74,15 @@ Reset all data option.
 
 Visual & Aesthetic Direction
 
-Theme: Warm, devotional, minimal — not cluttered. Think temple aesthetics meets modern app design.
+Theme: Warm, devotional, minimal - not cluttered. Think temple aesthetics meets modern app design.
 
 Color palette: Deep maroon, saffron/orange, warm gold accents, cream/off-white backgrounds; optional dark mode with deep brown/black and gold accents (like diya-lit ambience).
 
 Typography: Elegant serif or soft rounded sans-serif for numbers and headings; avoid anything harsh or overly "techy."
 
-Motifs: Subtle mandala patterns, lotus motifs, or rudraksha bead textures as background accents — kept subtle so they don't overwhelm the counter.
+Motifs: Subtle mandala patterns, lotus motifs, or rudraksha bead textures as background accents - kept subtle so they don't overwhelm the counter.
 
-Central bead button: Should look tactile — a 3D-ish rudraksha/gemstone bead with soft shadows and a gentle glow, not a flat generic button.
+Central bead button: Should look tactile - a 3D-ish rudraksha/gemstone bead with soft shadows and a gentle glow, not a flat generic button.
 
 Animation & Interaction Requirements (use Framer Motion or similar)
 
@@ -90,7 +90,7 @@ On tap: Bead does a satisfying press/scale animation (scale down slightly then b
 
 Progress ring: Smoothly animates fill as count increases; smoothly retracts on undo.
 
-On mala completion (108): A distinct, delightful animation — e.g., a burst of light/petals/sparkles around the bead, a brief full-screen glow, celebratory chime, and a short congratulatory message ("Mala Complete 🙏 — 1 more step on your journey").
+On mala completion (108): A distinct, delightful animation - e.g., a burst of light/petals/sparkles around the bead, a brief full-screen glow, celebratory chime, and a short congratulatory message ("Mala Complete 🙏 - 1 more step on your journey").
 
 Micro-interactions: Smooth transitions between screens (fade/slide), subtle idle animation on the bead (gentle breathing/glow pulse) when the app is at rest, so it feels alive rather than static.
 
@@ -98,11 +98,11 @@ Streak indicator: Small animated flame or diya icon that grows/glows more as str
 
 Technical Notes
 
-Build as a responsive PWA (works well on both Android and iOS browsers, and looks native when added to home screen — proper manifest.json, icons, splash screen, theme-color meta tag).
+Build as a responsive PWA (works well on both Android and iOS browsers, and looks native when added to home screen - proper manifest.json, icons, splash screen, theme-color meta tag).
 
 Use React with Tailwind CSS for styling and Framer Motion for animations.
 
-No backend, no auth, no external database — pure client-side app with localStorage persistence.
+No backend, no auth, no external database - pure client-side app with localStorage persistence.
 
 Ensure it works fully offline once loaded.
 
@@ -112,7 +112,7 @@ Ensure touch targets are large and comfortable for one-handed use (people often 
 
 Tone
 
-The overall feel should be calm, sacred, and encouraging — like a digital companion for a spiritual practice, not a gamified productivity app. Avoid anything that feels like a generic "counter" or "clicker" app.
+The overall feel should be calm, sacred, and encouraging - like a digital companion for a spiritual practice, not a gamified productivity app. Avoid anything that feels like a generic "counter" or "clicker" app.
 
 This project was built with [Lovable](https://lovable.dev).
 
@@ -126,7 +126,7 @@ Continue developing this project in the [Lovable editor](https://lovable.dev/pro
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Prefer working locally? You need Node.js and npm - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```sh
 git clone <this-repository-url>

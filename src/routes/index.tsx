@@ -9,7 +9,7 @@ import { currentStreak, todayKey } from "@/lib/mala";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Mala Jaap Counter — Offline Japa Bead Counter" },
+      { title: "Mala Jaap Counter - Offline Japa Bead Counter" },
       {
         name: "description",
         content:
@@ -105,7 +105,7 @@ function CounterScreen() {
                 exit={{ opacity: 0, y: -8 }}
                 className="font-display text-lg text-primary"
               >
-                Mala Complete 🙏 — one more step on your journey
+                Mala Complete 🙏 - one more step on your journey
               </motion.p>
             ) : (
               <motion.p

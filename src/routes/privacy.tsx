@@ -5,13 +5,13 @@ import { MandalaBackground } from "@/components/MandalaBackground";
 export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [
-      { title: "Privacy Policy — Mala Jaap Counter" },
+      { title: "Privacy Policy - Mala Jaap Counter" },
       {
         name: "description",
         content:
           "Mala Jaap Counter stores your counts, streaks and settings only on your own device. No accounts, no servers, no tracking.",
       },
-      { property: "og:title", content: "Privacy Policy — Mala Jaap Counter" },
+      { property: "og:title", content: "Privacy Policy - Mala Jaap Counter" },
       {
         property: "og:description",
         content: "Your japa data never leaves your device. No accounts, no analytics, no ads.",
@@ -49,7 +49,7 @@ function PrivacyScreen() {
           <Section title="What is stored">
             Your current bead count, completed malas, lifetime jaaps, daily history, streaks and
             preferences (bead style, mala length, sound, vibration, reminder time) are saved in your
-            browser&apos;s local storage — a private cache on this device only.
+            browser&apos;s local storage - a private cache on this device only.
           </Section>
 
           <Section title="What we collect">

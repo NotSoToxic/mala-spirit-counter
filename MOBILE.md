@@ -1,6 +1,6 @@
 # Shipping Mala Jaap to the App Store & Play Store
 
-The web app is unchanged — Capacitor wraps the exact same build in a native iOS
+The web app is unchanged - Capacitor wraps the exact same build in a native iOS
 and Android shell. Everything below runs on your own machine, not in Lovable.
 
 ## One-time setup
@@ -36,16 +36,16 @@ npx cap open android
 A normal deploy renders pages on a server. A store app has no server, so the
 script builds the app, boots the production build locally, saves each screen
 (`/`, `/stats`, `/settings`) as a static HTML file, and shuts the server down.
-The app then runs entirely from the device — all counts, streaks and history
+The app then runs entirely from the device - all counts, streaks and history
 stay in the device's local storage, exactly as on the web.
 
 ## App identity
 
 Edit `capacitor.config.ts` to change:
 
-- `appId` — reverse-domain bundle ID (`app.malajaap.counter`). Set this before
+- `appId` - reverse-domain bundle ID (`app.malajaap.counter`). Set this before
   your first store upload; it cannot be changed afterwards.
-- `appName` — the name shown under the icon.
+- `appName` - the name shown under the icon.
 
 ## Store requirements checklist
 
@@ -53,7 +53,7 @@ Edit `capacitor.config.ts` to change:
 - App Store Connect record, bundle ID matching `appId`
 - Icon 1024×1024, screenshots for 6.7" and 6.5" iPhones
 - Privacy policy URL and "Data Not Collected" privacy nutrition label
-  (true here — nothing leaves the device)
+  (true here - nothing leaves the device)
 - Archive in Xcode → Distribute App → App Store Connect
 
 **Google ($25 one-time, Android Studio)**
