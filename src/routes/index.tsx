@@ -20,10 +20,15 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "A calm, offline mala bead counter for your daily spiritual practice.",
       },
-      { property: "og:url", content: "/" },
+      { property: "og:url", content: "https://mala-spirit-counter.lovable.app/" },
+      { property: "og:image", content: "https://mala-spirit-counter.lovable.app/og/home.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "https://mala-spirit-counter.lovable.app/og/home.png" },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: "https://mala-spirit-counter.lovable.app/" }],
     scripts: [
       {
         type: "application/ld+json",
