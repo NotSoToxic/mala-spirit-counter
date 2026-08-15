@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { registerAppServiceWorker } from "../lib/pwa";
+import { initNativeShell } from "../lib/native";
 
 
 function NotFoundComponent() {
@@ -132,6 +133,7 @@ function RootComponent() {
 
   useEffect(() => {
     registerAppServiceWorker();
+    initNativeShell();
   }, []);
 
 

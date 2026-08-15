@@ -1,3 +1,5 @@
+import { nativeHaptic } from "./native";
+
 let ctx: AudioContext | null = null;
 
 function audio(): AudioContext | null {
@@ -40,6 +42,9 @@ export function playChime() {
 }
 
 export function vibrate(pattern: number | number[]) {
+  // In the native app shell, use real device haptics instead of the web API.
+  const total = Array.isArray(pattern) ? pattern.reduce((a, b) => a + b, 0) : pattern;
+  if (nativeHaptic(total > 200 ? "heavy" : total > 40 ? "medium" : "light")) return;
   if (typeof navigator === "undefined" || !("vibrate" in navigator)) return;
   try {
     navigator.vibrate(pattern);
