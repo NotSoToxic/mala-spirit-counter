@@ -2,21 +2,21 @@
 /**
  * Produces a fully static bundle in dist/client for the Capacitor native shell.
  *
- * The web deployment is server-rendered, but a native app ships without a server,
- * so this script builds the app and then writes a static HTML entry that boots the
- * client bundle directly. Routing happens client-side, and all data lives in
- * localStorage, so the packaged app works completely offline.
+ * The web deployment is server-rendered, but a native app ships without a server.
+ * This script builds the app, boots the production build locally, snapshots each
+ * route to an HTML file, then shuts the server down. The result is a plain folder
+ * of HTML + assets that Capacitor packages inside the iOS/Android binary and that
+ * runs completely offline (all data lives in localStorage).
  *
  * Usage: npm run build:mobile
  */
 import { spawn } from "node:child_process";
-import { readdir, mkdir, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { mkdir, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
 
+const ROUTES = ["/", "/stats", "/settings"];
+const PORT = 4185;
 const OUT_DIR = "dist/client";
-const ASSETS_DIR = join(OUT_DIR, "assets");
-// Routes that need their own index.html so a deep link / reload inside the app resolves.
-const ROUTES = ["/stats", "/settings"];
 
 function run(cmd, args) {
   return new Promise((resolve, reject) => {
@@ -27,52 +27,54 @@ function run(cmd, args) {
   });
 }
 
-function html({ entry, css }) {
-  return `<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
-    <meta name="theme-color" content="#2A0A0F" />
-    <title>Mala Jaap — Bead Counter</title>
-    <meta name="description" content="A calm, offline mala counter for your daily jaap: 108-bead rounds, streaks and lifetime totals." />
-    <link rel="icon" href="/favicon.png" />
-    <link rel="apple-touch-icon" href="/icon-192.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Karla:wght@400;500;600;700&display=swap" />
-${css.map((f) => `    <link rel="stylesheet" href="/assets/${f}" />`).join("\n")}
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/assets/${entry}"></script>
-  </body>
-</html>
-`;
+async function waitForServer(url, timeoutMs = 90_000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) return;
+    } catch {
+      /* not up yet */
+    }
+    await new Promise((r) => setTimeout(r, 500));
+  }
+  throw new Error(`Server did not start at ${url}`);
 }
 
 async function main() {
   console.log("→ Building web app…");
   await run("npx", ["vite", "build"]);
 
-  const files = await readdir(ASSETS_DIR);
-  const entry = files.find((f) => /^index-.*\.js$/.test(f));
-  const css = files.filter((f) => f.endsWith(".css"));
-  if (!entry) throw new Error("Could not find the client entry bundle in dist/client/assets");
+  console.log("→ Booting production build to snapshot pages…");
+  const server = spawn(
+    "npx",
+    ["wrangler", "dev", "--config", "dist/server/wrangler.json", "--port", String(PORT), "--ip", "127.0.0.1"],
+    { stdio: "ignore", shell: true, detached: true },
+  );
 
-  const page = html({ entry, css });
-  await writeFile(join(OUT_DIR, "index.html"), page, "utf8");
-  console.log(`  ✓ / → ${OUT_DIR}/index.html`);
+  try {
+    await waitForServer(`http://127.0.0.1:${PORT}/`);
 
-  for (const route of ROUTES) {
-    const dir = join(OUT_DIR, route.slice(1));
-    await mkdir(dir, { recursive: true });
-    await writeFile(join(dir, "index.html"), page, "utf8");
-    console.log(`  ✓ ${route} → ${dir}/index.html`);
+    for (const route of ROUTES) {
+      const res = await fetch(`http://127.0.0.1:${PORT}${route}`);
+      if (!res.ok) throw new Error(`${route} responded ${res.status}`);
+      const html = await res.text();
+      const file =
+        route === "/" ? join(OUT_DIR, "index.html") : join(OUT_DIR, route.slice(1), "index.html");
+      await mkdir(dirname(file), { recursive: true });
+      await writeFile(file, html, "utf8");
+      console.log(`  ✓ ${route} → ${file}`);
+    }
+  } finally {
+    try {
+      process.kill(-server.pid, "SIGTERM");
+    } catch {
+      server.kill("SIGTERM");
+    }
   }
 
   console.log("\n✓ Static bundle ready in dist/client");
-  console.log("  Next: npx cap sync");
+  console.log("  Next: npx cap sync   (then open in Xcode / Android Studio)");
 }
 
 main().catch((err) => {
