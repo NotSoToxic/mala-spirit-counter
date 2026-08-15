@@ -5,6 +5,7 @@ import { MandalaBackground } from "@/components/MandalaBackground";
 import { useMala } from "@/hooks/useMala";
 import { BEAD_THEMES, MALA_LENGTHS } from "@/lib/mala";
 import { Switch } from "@/components/ui/switch";
+import { requestReminderPermission, syncNativeReminder } from "@/lib/reminder";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,7 +35,26 @@ export const Route = createFileRoute("/settings")({
 function SettingsScreen() {
   const { data, updateSettings, resetAll } = useMala();
   const [confirming, setConfirming] = useState(false);
+  const [reminderBlocked, setReminderBlocked] = useState(false);
   const s = data.settings;
+
+  const toggleReminder = async (on: boolean) => {
+    if (!on) {
+      updateSettings({ reminder: false });
+      void syncNativeReminder(false, s.reminderTime);
+      return;
+    }
+    const granted = await requestReminderPermission();
+    setReminderBlocked(!granted);
+    if (!granted) return;
+    updateSettings({ reminder: true });
+    void syncNativeReminder(true, s.reminderTime);
+  };
+
+  const changeReminderTime = (time: string) => {
+    updateSettings({ reminderTime: time });
+    if (s.reminder) void syncNativeReminder(true, time);
+  };
 
   return (
     <main className="relative min-h-screen px-5 pb-12 pt-8">
@@ -61,6 +81,33 @@ function SettingsScreen() {
           <Row label="Diya-lit mode" hint="Dark theme for low light">
             <Switch checked={s.dark} onCheckedChange={(v) => updateSettings({ dark: v })} />
           </Row>
+        </section>
+
+        <section className="shrine-card space-y-1 rounded-2xl p-2">
+          <Row label="Daily reminder" hint="A gentle nudge if you haven't sat with your mala">
+            <Switch checked={s.reminder} onCheckedChange={(v) => void toggleReminder(v)} />
+          </Row>
+          {s.reminder && (
+            <div className="flex min-h-14 items-center justify-between gap-4 rounded-xl px-3 py-2">
+              <div>
+                <div className="text-sm text-foreground">Reminder time</div>
+                <div className="text-xs text-muted-foreground">Scheduled on this device only</div>
+              </div>
+              <input
+                type="time"
+                value={s.reminderTime}
+                onChange={(e) => changeReminderTime(e.target.value)}
+                aria-label="Reminder time"
+                className="rounded-xl bg-secondary px-3 py-2 text-sm text-secondary-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+            </div>
+          )}
+          {reminderBlocked && (
+            <p className="px-3 pb-2 text-xs text-destructive">
+              Notifications are blocked. Allow them for this app in your browser or device settings,
+              then try again.
+            </p>
+          )}
         </section>
 
         <section className="shrine-card space-y-3 rounded-2xl p-4">
@@ -110,6 +157,23 @@ function SettingsScreen() {
         >
           Reset all data
         </button>
+
+        <section className="space-y-2 pt-2 text-center">
+          <p className="text-xs leading-relaxed text-muted-foreground">
+            Your counts, malas, streaks and history are stored only in this device&apos;s local
+            cache — never on a server. Clearing site data or uninstalling the app erases them
+            permanently.
+          </p>
+          <p className="text-xs text-muted-foreground">
+            <Link to="/privacy" className="underline underline-offset-4 hover:text-foreground">
+              Privacy Policy
+            </Link>
+            <span className="px-2">·</span>
+            <Link to="/terms" className="underline underline-offset-4 hover:text-foreground">
+              Terms of Use
+            </Link>
+          </p>
+        </section>
       </div>
 
       <AlertDialog open={confirming} onOpenChange={setConfirming}>
