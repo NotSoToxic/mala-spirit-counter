@@ -6,7 +6,7 @@ import { useMala } from "@/hooks/useMala";
 import { BEAD_THEMES, MALA_LENGTHS } from "@/lib/mala";
 import { Switch } from "@/components/ui/switch";
 import { requestReminderPermission, syncNativeReminder } from "@/lib/reminder";
-import { getAudioState, subscribeAudioState, unlockAudio, type AudioState } from "@/lib/feedback";
+import { getAudioState, playChime, subscribeAudioState, unlockAudio, type AudioState } from "@/lib/feedback";
 import {
   AlertDialog,
   AlertDialogAction,
