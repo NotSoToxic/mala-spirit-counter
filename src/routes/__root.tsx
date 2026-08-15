@@ -94,6 +94,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Mala Jaap Counter" },
       { property: "og:description", content: "A calm, offline mala bead counter for daily japa practice." },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Mala Jaap Counter" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [

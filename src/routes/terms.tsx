@@ -16,7 +16,10 @@ export const Route = createFileRoute("/terms")({
         property: "og:description",
         content: "Simple, plain-language terms for this free offline mala counter.",
       },
+      { property: "og:url", content: "https://mala-spirit-counter.lovable.app/terms" },
+      { property: "og:type", content: "article" },
     ],
+    links: [{ rel: "canonical", href: "https://mala-spirit-counter.lovable.app/terms" }],
   }),
   component: TermsScreen,
 });

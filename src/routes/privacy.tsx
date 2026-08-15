@@ -16,7 +16,10 @@ export const Route = createFileRoute("/privacy")({
         property: "og:description",
         content: "Your japa data never leaves your device. No accounts, no analytics, no ads.",
       },
+      { property: "og:url", content: "https://mala-spirit-counter.lovable.app/privacy" },
+      { property: "og:type", content: "article" },
     ],
+    links: [{ rel: "canonical", href: "https://mala-spirit-counter.lovable.app/privacy" }],
   }),
   component: PrivacyScreen,
 });

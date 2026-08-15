@@ -27,7 +27,10 @@ export const Route = createFileRoute("/settings")({
       },
       { property: "og:title", content: "Mala Jaap Settings" },
       { property: "og:description", content: "Personalise your bead, mala length and feedback." },
+      { property: "og:url", content: "https://mala-spirit-counter.lovable.app/settings" },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: "https://mala-spirit-counter.lovable.app/settings" }],
   }),
   component: SettingsScreen,
 });
