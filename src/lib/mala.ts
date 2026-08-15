@@ -6,6 +6,8 @@ export type MalaSettings = {
   bead: BeadTheme;
   malaLength: number;
   dark: boolean;
+  reminder: boolean;
+  reminderTime: string;
 };
 
 export type DayEntry = { jaaps: number; malas: number };
@@ -40,6 +42,8 @@ export const defaultData = (): MalaData => ({
     bead: "rudraksha",
     malaLength: 108,
     dark: false,
+    reminder: false,
+    reminderTime: "07:00",
   },
 });
 
