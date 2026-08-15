@@ -2,14 +2,104 @@ import { nativeHaptic } from "./native";
 
 let ctx: AudioContext | null = null;
 
-function audio(): AudioContext | null {
+/** unsupported = no Web Audio at all; locked = waiting for a user tap; ready = playing; blocked = tap happened but the browser still refuses. */
+export type AudioState = "unsupported" | "locked" | "ready" | "blocked";
+
+let state: AudioState = "locked";
+const listeners = new Set<(s: AudioState) => void>();
+
+function setState(next: AudioState) {
+  if (state === next) return;
+  state = next;
+  listeners.forEach((l) => l(next));
+}
+
+export function getAudioState(): AudioState {
+  return state;
+}
+
+export function subscribeAudioState(fn: (s: AudioState) => void) {
+  listeners.add(fn);
+  fn(state);
+  return () => listeners.delete(fn);
+}
+
+function ctor() {
   if (typeof window === "undefined") return null;
-  const Ctor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-  if (!Ctor) return null;
+  return (
+    window.AudioContext ??
+    (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext ??
+    null
+  );
+}
+
+/**
+ * iOS Safari only allows an AudioContext to start inside a user gesture.
+ * Call this from a real tap/click handler; it creates + resumes the context
+ * and plays a silent buffer to fully unlock playback.
+ */
+export function unlockAudio(): boolean {
+  const Ctor = ctor();
+  if (!Ctor) {
+    setState("unsupported");
+    return false;
+  }
+  try {
+    if (!ctx) ctx = new Ctor();
+    void ctx.resume();
+    const buf = ctx.createBuffer(1, 1, 22050);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    src.start(0);
+    // Give Safari a tick to settle the state before judging it.
+    window.setTimeout(() => {
+      setState(ctx && ctx.state === "running" ? "ready" : "blocked");
+    }, 120);
+    setState(ctx.state === "running" ? "ready" : state === "ready" ? "ready" : "locked");
+    return true;
+  } catch {
+    setState("blocked");
+    return false;
+  }
+}
+
+let listening = false;
+
+/** Registers one-shot listeners so the very first tap anywhere enables sound. */
+export function initAudioUnlock() {
+  if (typeof window === "undefined" || listening) return;
+  listening = true;
+  if (!ctor()) {
+    setState("unsupported");
+    return;
+  }
+  const handler = () => unlockAudio();
+  const opts = { passive: true } as const;
+  window.addEventListener("pointerdown", handler, opts);
+  window.addEventListener("touchend", handler, opts);
+  window.addEventListener("keydown", handler);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && ctx && ctx.state !== "running") setState("locked");
+  });
+}
+
+function audio(): AudioContext | null {
+  const Ctor = ctor();
+  if (!Ctor) {
+    setState("unsupported");
+    return null;
+  }
   if (!ctx) ctx = new Ctor();
-  if (ctx.state === "suspended") void ctx.resume();
+  if (ctx.state === "suspended") {
+    void ctx.resume();
+    setState("locked");
+  } else if (ctx.state === "running") {
+    setState("ready");
+  }
   return ctx;
 }
+
 
 function tone(freq: number, duration: number, gainPeak: number, delay = 0) {
   const ac = audio();
