@@ -20,6 +20,25 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "A calm, offline mala bead counter for your daily spiritual practice.",
       },
+      { property: "og:url", content: "https://mala-spirit-counter.lovable.app/" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "https://mala-spirit-counter.lovable.app/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "Mala Jaap Counter",
+          applicationCategory: "LifestyleApplication",
+          operatingSystem: "Web, iOS, Android",
+          description:
+            "An offline mala bead counter for daily japa: tap the bead, track malas, lifetime jaaps and daily streaks.",
+          url: "https://mala-spirit-counter.lovable.app/",
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        }),
+      },
     ],
   }),
   component: CounterScreen,

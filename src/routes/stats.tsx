@@ -15,7 +15,10 @@ export const Route = createFileRoute("/stats")({
       },
       { property: "og:title", content: "Your Japa Journey" },
       { property: "og:description", content: "Lifetime totals, daily history and streaks for your japa practice." },
+      { property: "og:url", content: "https://mala-spirit-counter.lovable.app/stats" },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: "https://mala-spirit-counter.lovable.app/stats" }],
   }),
   component: StatsScreen,
 });
