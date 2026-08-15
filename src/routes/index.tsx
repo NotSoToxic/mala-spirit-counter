@@ -136,6 +136,17 @@ function CounterScreen() {
             Reset round
           </ActionButton>
         </div>
+
+        <p className="text-center text-[0.7rem] leading-relaxed text-muted-foreground">
+          Saved only on this device&apos;s local cache.{" "}
+          <Link to="/privacy" className="underline underline-offset-4 hover:text-foreground">
+            Privacy
+          </Link>
+          <span className="px-1">·</span>
+          <Link to="/terms" className="underline underline-offset-4 hover:text-foreground">
+            Terms
+          </Link>
+        </p>
       </section>
     </main>
   );
