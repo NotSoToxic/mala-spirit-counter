@@ -75,6 +75,10 @@ function TermsScreen() {
         </div>
 
         <p className="text-center text-xs text-muted-foreground">
+          <Link to="/faq" className="underline underline-offset-4 hover:text-foreground">
+            FAQ
+          </Link>
+          <span className="px-2">·</span>
           <Link to="/privacy" className="underline underline-offset-4 hover:text-foreground">
             Privacy Policy
           </Link>
