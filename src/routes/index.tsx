@@ -163,6 +163,10 @@ function CounterScreen() {
 
         <p className="text-center text-[0.7rem] leading-relaxed text-muted-foreground">
           Saved only on this device&apos;s local cache.{" "}
+          <Link to="/install" className="underline underline-offset-4 hover:text-foreground">
+            Install
+          </Link>
+          <span className="px-1">·</span>
           <Link to="/faq" className="underline underline-offset-4 hover:text-foreground">
             FAQ
           </Link>

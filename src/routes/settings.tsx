@@ -173,6 +173,10 @@ function SettingsScreen() {
             permanently.
           </p>
           <p className="text-xs text-muted-foreground">
+            <Link to="/install" className="underline underline-offset-4 hover:text-foreground">
+              Install on phone
+            </Link>
+            <span className="px-2">·</span>
             <Link to="/faq" className="underline underline-offset-4 hover:text-foreground">
               FAQ
             </Link>
