@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronLeft, Info, Smartphone } from "lucide-react";
+import { ChevronLeft, Info, Smartphone, Volume2 } from "lucide-react";
 import { MandalaBackground } from "@/components/MandalaBackground";
 import { useMala } from "@/hooks/useMala";
 import { BEAD_THEMES, MALA_LENGTHS } from "@/lib/mala";
 import { Switch } from "@/components/ui/switch";
 import { requestReminderPermission, syncNativeReminder } from "@/lib/reminder";
+import { getAudioState, subscribeAudioState, unlockAudio, type AudioState } from "@/lib/feedback";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -45,6 +46,7 @@ function SettingsScreen() {
   const [confirming, setConfirming] = useState(false);
   const [reminderBlocked, setReminderBlocked] = useState(false);
   const [noVibrationSupport, setNoVibrationSupport] = useState(false);
+  const [audioState, setAudioState] = useState<AudioState>(() => getAudioState());
   const s = data.settings;
 
   useEffect(() => {
@@ -52,6 +54,8 @@ function SettingsScreen() {
     if (isNative) return;
     setNoVibrationSupport(typeof navigator !== "undefined" && !("vibrate" in navigator));
   }, []);
+
+  useEffect(() => subscribeAudioState(setAudioState), []);
 
   const toggleReminder = async (on: boolean) => {
     if (!on) {
@@ -87,9 +91,52 @@ function SettingsScreen() {
         </header>
 
         <section className="shrine-card space-y-1 rounded-2xl p-2">
-          <Row label="Sound" hint="Bead click and completion chime">
-            <Switch checked={s.sound} onCheckedChange={(v) => updateSettings({ sound: v })} />
+          <Row
+            label={
+              <span className="inline-flex items-center gap-2">
+                Sound
+                {s.sound && audioState !== "ready" && audioState !== "unsupported" && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[0.65rem] font-medium text-amber-600 dark:text-amber-400">
+                    <Volume2 className="h-3 w-3" />
+                    {audioState === "blocked" ? "Blocked" : "Tap to enable"}
+                  </span>
+                )}
+              </span>
+            }
+            hint="Bead click and completion chime"
+          >
+            <Switch
+              checked={s.sound}
+              onCheckedChange={(v) => {
+                if (v) unlockAudio();
+                updateSettings({ sound: v });
+              }}
+            />
           </Row>
+          {s.sound && audioState !== "ready" && (
+            <div className="mx-3 mb-3 flex gap-2 rounded-xl bg-secondary/60 p-3">
+              <Info className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+              <div className="space-y-2">
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {audioState === "unsupported"
+                    ? "This browser does not support web audio, so the bead click and chime stay silent."
+                    : audioState === "blocked"
+                      ? "Your browser is blocking playback. Check the silent switch and volume on iPhone, then tap Enable sound again."
+                      : "iPhone and iPad need one tap before sound can play. Tap the button below or your first bead to enable it."}
+                </p>
+                {audioState !== "unsupported" && (
+                  <button
+                    type="button"
+                    onClick={() => unlockAudio()}
+                    className="inline-flex items-center gap-2 rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground"
+                  >
+                    <Volume2 className="h-3.5 w-3.5" />
+                    Enable sound
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
           <Row
             label={
               <span className="inline-flex items-center gap-2">
