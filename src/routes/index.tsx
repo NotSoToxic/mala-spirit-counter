@@ -1,24 +1,176 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { AnimatePresence, motion } from "motion/react";
+import { BarChart3, Flame, RotateCcw, Settings, Undo2 } from "lucide-react";
+import { BeadButton } from "@/components/BeadButton";
+import { MandalaBackground } from "@/components/MandalaBackground";
+import { useMala } from "@/hooks/useMala";
+import { currentStreak, todayKey } from "@/lib/mala";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Mala Jaap Counter — Offline Japa Bead Counter" },
+      {
+        name: "description",
+        content:
+          "Tap the bead to count your japa. Tracks malas, lifetime jaaps and daily streaks offline on your device.",
+      },
+      { property: "og:title", content: "Mala Jaap Counter" },
+      {
+        property: "og:description",
+        content: "A calm, offline mala bead counter for your daily spiritual practice.",
+      },
+    ],
+  }),
+  component: CounterScreen,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function CounterScreen() {
+  const { data, ready, celebrating, increment, decrement, resetRound } = useMala();
+  const today = data.history[todayKey()] ?? { jaaps: 0, malas: 0 };
+  const streak = currentStreak(data.history);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <main className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden px-5 pb-6 pt-8">
+      <MandalaBackground />
+
+      <header className="relative flex w-full max-w-md items-center justify-between">
+        <h1 className="font-display text-xl tracking-wide text-foreground">Mala Jaap</h1>
+        <div className="flex items-center gap-1">
+          <Link
+            to="/stats"
+            aria-label="Stats and history"
+            className="rounded-full p-3 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            <BarChart3 className="h-5 w-5" />
+          </Link>
+          <Link
+            to="/settings"
+            aria-label="Settings"
+            className="rounded-full p-3 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            <Settings className="h-5 w-5" />
+          </Link>
+        </div>
+      </header>
+
+      <div className="relative flex flex-col items-center gap-8">
+        <AnimatePresence>
+          {celebrating && (
+            <motion.div
+              key="glow"
+              className="pointer-events-none fixed inset-0 bg-accent"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.35, 0] }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.8, ease: "easeOut" }}
+            />
+          )}
+        </AnimatePresence>
+
+        <BeadButton
+          count={data.count}
+          length={data.settings.malaLength}
+          bead={data.settings.bead}
+          celebrating={celebrating}
+          onTap={increment}
+        />
+
+        <div className="h-8">
+          <AnimatePresence mode="wait">
+            {celebrating ? (
+              <motion.p
+                key="done"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                className="font-display text-lg text-primary"
+              >
+                Mala Complete 🙏 — one more step on your journey
+              </motion.p>
+            ) : (
+              <motion.p
+                key="idle"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="text-sm text-muted-foreground"
+              >
+                {ready ? "Tap the bead with each mantra" : " "}
+              </motion.p>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      <section className="relative w-full max-w-md space-y-4">
+        <div className="shrine-card grid grid-cols-3 rounded-2xl px-2 py-3 text-center">
+          <Stat label="Today" value={`${today.malas} malas`} />
+          <Stat label="Lifetime" value={`${data.totalMalas} malas`} />
+          <Stat
+            label="Streak"
+            value={`${streak} ${streak === 1 ? "day" : "days"}`}
+            icon={
+              <motion.span
+                animate={{ scale: [1, 1.15, 1], opacity: [0.75, 1, 0.75] }}
+                transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                className="text-accent"
+                style={{ display: "inline-flex" }}
+              >
+                <Flame
+                  className="h-4 w-4"
+                  style={{ filter: streak > 0 ? "drop-shadow(0 0 6px var(--saffron))" : "none" }}
+                />
+              </motion.span>
+            }
+          />
+        </div>
+
+        <div className="flex items-center justify-center gap-3">
+          <ActionButton onClick={decrement} label="Undo one">
+            <Undo2 className="h-5 w-5" />
+            Undo
+          </ActionButton>
+          <ActionButton onClick={resetRound} label="Reset current round">
+            <RotateCcw className="h-5 w-5" />
+            Reset round
+          </ActionButton>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function Stat({ label, value, icon }: { label: string; value: string; icon?: React.ReactNode }) {
+  return (
+    <div className="flex flex-col items-center gap-0.5">
+      <span className="text-[0.65rem] uppercase tracking-[0.25em] text-muted-foreground">{label}</span>
+      <span className="flex items-center gap-1.5 font-display text-lg text-foreground">
+        {icon}
+        {value}
+      </span>
     </div>
+  );
+}
+
+function ActionButton({
+  onClick,
+  label,
+  children,
+}: {
+  onClick: () => void;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      whileTap={{ scale: 0.95 }}
+      className="shrine-card flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl px-4 text-sm text-foreground transition-colors hover:bg-secondary"
+    >
+      {children}
+    </motion.button>
   );
 }

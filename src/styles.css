@@ -140,5 +140,137 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
   }
 }
+
+/* ---------------- Mala Jaap devotional design system ---------------- */
+
+@theme inline {
+  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-sans: "Karla", ui-sans-serif, system-ui, sans-serif;
+  --color-saffron: var(--saffron);
+  --color-gold: var(--gold);
+  --color-maroon: var(--maroon);
+}
+
+:root {
+  --radius: 1rem;
+  --background: oklch(0.976 0.014 84);
+  --foreground: oklch(0.28 0.09 25);
+  --card: oklch(0.985 0.012 86);
+  --card-foreground: oklch(0.28 0.09 25);
+  --popover: oklch(0.985 0.012 86);
+  --popover-foreground: oklch(0.28 0.09 25);
+  --primary: oklch(0.38 0.14 22);
+  --primary-foreground: oklch(0.98 0.014 84);
+  --secondary: oklch(0.94 0.032 78);
+  --secondary-foreground: oklch(0.34 0.11 30);
+  --muted: oklch(0.94 0.026 80);
+  --muted-foreground: oklch(0.52 0.055 45);
+  --accent: oklch(0.74 0.16 62);
+  --accent-foreground: oklch(0.26 0.09 25);
+  --destructive: oklch(0.55 0.2 27);
+  --destructive-foreground: oklch(0.98 0.01 84);
+  --border: oklch(0.89 0.03 72);
+  --input: oklch(0.89 0.03 72);
+  --ring: oklch(0.74 0.16 62);
+  --maroon: oklch(0.34 0.13 22);
+  --saffron: oklch(0.72 0.17 55);
+  --gold: oklch(0.8 0.13 82);
+  --gradient-shrine: radial-gradient(
+    120% 90% at 50% 0%,
+    oklch(0.96 0.04 78) 0%,
+    oklch(0.975 0.016 84) 55%,
+    oklch(0.95 0.03 60) 100%
+  );
+  --shadow-bead: 0 24px 60px -18px color-mix(in oklab, var(--maroon) 55%, transparent);
+  --glow-soft: 0 0 60px color-mix(in oklab, var(--saffron) 45%, transparent);
+}
+
+.dark {
+  --background: oklch(0.17 0.028 40);
+  --foreground: oklch(0.94 0.03 82);
+  --card: oklch(0.22 0.035 38);
+  --card-foreground: oklch(0.94 0.03 82);
+  --popover: oklch(0.22 0.035 38);
+  --popover-foreground: oklch(0.94 0.03 82);
+  --primary: oklch(0.8 0.13 82);
+  --primary-foreground: oklch(0.2 0.05 32);
+  --secondary: oklch(0.27 0.045 36);
+  --secondary-foreground: oklch(0.93 0.035 82);
+  --muted: oklch(0.26 0.04 36);
+  --muted-foreground: oklch(0.74 0.05 70);
+  --accent: oklch(0.74 0.16 62);
+  --accent-foreground: oklch(0.2 0.05 32);
+  --destructive: oklch(0.62 0.2 27);
+  --destructive-foreground: oklch(0.97 0.01 84);
+  --border: oklch(0.34 0.05 44 / 70%);
+  --input: oklch(0.34 0.05 44 / 70%);
+  --ring: oklch(0.8 0.13 82);
+  --maroon: oklch(0.32 0.11 22);
+  --saffron: oklch(0.74 0.16 58);
+  --gold: oklch(0.83 0.13 84);
+  --gradient-shrine: radial-gradient(
+    120% 90% at 50% 0%,
+    oklch(0.26 0.06 42) 0%,
+    oklch(0.17 0.028 40) 60%,
+    oklch(0.13 0.02 34) 100%
+  );
+  --shadow-bead: 0 26px 70px -20px oklch(0 0 0 / 70%);
+  --glow-soft: 0 0 70px color-mix(in oklab, var(--gold) 40%, transparent);
+}
+
+/* Bead themes */
+:root,
+[data-bead="rudraksha"] {
+  --bead-hi: oklch(0.62 0.11 52);
+  --bead-core: oklch(0.44 0.1 40);
+  --bead-edge: oklch(0.26 0.06 32);
+}
+[data-bead="tulsi"] {
+  --bead-hi: oklch(0.68 0.1 140);
+  --bead-core: oklch(0.48 0.09 145);
+  --bead-edge: oklch(0.27 0.05 148);
+}
+[data-bead="sandalwood"] {
+  --bead-hi: oklch(0.93 0.04 84);
+  --bead-core: oklch(0.83 0.06 76);
+  --bead-edge: oklch(0.6 0.06 62);
+}
+[data-bead="gold"] {
+  --bead-hi: oklch(0.93 0.09 92);
+  --bead-core: oklch(0.79 0.14 84);
+  --bead-edge: oklch(0.52 0.1 66);
+}
+
+@theme inline {
+  --color-bead-rudraksha: oklch(0.44 0.1 40);
+  --color-bead-tulsi: oklch(0.48 0.09 145);
+  --color-bead-sandalwood: oklch(0.83 0.06 76);
+  --color-bead-gold: oklch(0.79 0.14 84);
+}
+
+@utility bead-surface {
+  background:
+    radial-gradient(circle at 32% 26%, var(--bead-hi) 0%, var(--bead-core) 46%, var(--bead-edge) 100%);
+  box-shadow:
+    var(--shadow-bead),
+    inset 0 -14px 30px color-mix(in oklab, var(--bead-edge) 70%, transparent),
+    inset 0 12px 26px color-mix(in oklab, var(--bead-hi) 45%, transparent);
+}
+
+@utility shrine-card {
+  background-color: color-mix(in oklab, var(--card) 82%, transparent);
+  border: 1px solid color-mix(in oklab, var(--border) 90%, transparent);
+  backdrop-filter: blur(10px);
+}
+
