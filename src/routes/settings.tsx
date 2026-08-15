@@ -55,7 +55,12 @@ function SettingsScreen() {
     setNoVibrationSupport(typeof navigator !== "undefined" && !("vibrate" in navigator));
   }, []);
 
-  useEffect(() => subscribeAudioState(setAudioState), []);
+  useEffect(() => {
+    const unsub = subscribeAudioState(setAudioState);
+    return () => {
+      unsub();
+    };
+  }, []);
 
   const toggleReminder = async (on: boolean) => {
     if (!on) {
