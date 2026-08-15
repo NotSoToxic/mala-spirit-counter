@@ -41,7 +41,7 @@ const FAQS = [
   {
     question: "Is there an iOS or Android app?",
     answer:
-      "The web app can be installed as a PWA from your browser. A Capacitor-wrapped native build is also configured so the same app can be submitted to the App Store and Play Store.",
+      "The web app can be installed as a PWA from your browser. A dedicated native iOS and Android app launch is coming soon.",
   },
 ];
 
