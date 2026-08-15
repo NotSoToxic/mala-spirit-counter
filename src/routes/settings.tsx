@@ -90,14 +90,30 @@ function SettingsScreen() {
           <Row label="Sound" hint="Bead click and completion chime">
             <Switch checked={s.sound} onCheckedChange={(v) => updateSettings({ sound: v })} />
           </Row>
-          <Row label="Vibration" hint="Gentle haptic on each jaap">
+          <Row
+            label={
+              <span className="inline-flex items-center gap-2">
+                Vibration
+                {noVibrationSupport && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[0.65rem] font-medium text-amber-600 dark:text-amber-400">
+                    <Smartphone className="h-3 w-3" />
+                    iOS unsupported
+                  </span>
+                )}
+              </span>
+            }
+            hint="Gentle haptic on each jaap"
+          >
             <Switch checked={s.vibration} onCheckedChange={(v) => updateSettings({ vibration: v })} />
           </Row>
           {noVibrationSupport && (
-            <p className="px-3 pb-2 text-xs leading-relaxed text-muted-foreground">
-              iPhone and iPad browsers block web vibration, so haptics stay silent here. Keep sound on for
-              feedback - buzzing will arrive with the native app.
-            </p>
+            <div className="mx-3 mb-3 flex gap-2 rounded-xl bg-secondary/60 p-3">
+              <Info className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                iPhone and iPad browsers do not allow web apps to vibrate, so haptics stay silent here.
+                Keep sound on for feedback - real device buzzing will arrive with the native app.
+              </p>
+            </div>
           )}
           <Row label="Diya-lit mode" hint="Dark theme for low light">
             <Switch checked={s.dark} onCheckedChange={(v) => updateSettings({ dark: v })} />
