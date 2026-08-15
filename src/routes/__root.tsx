@@ -13,6 +13,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { registerAppServiceWorker } from "../lib/pwa";
 import { initNativeShell } from "../lib/native";
+import { PageTransition } from "../components/PageTransition";
+import { ReminderWatcher } from "../components/ReminderWatcher";
 
 
 function NotFoundComponent() {
@@ -140,8 +142,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <ReminderWatcher />
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <PageTransition>
+        <Outlet />
+      </PageTransition>
     </QueryClientProvider>
   );
 }
