@@ -93,6 +93,12 @@ function SettingsScreen() {
           <Row label="Vibration" hint="Gentle haptic on each jaap">
             <Switch checked={s.vibration} onCheckedChange={(v) => updateSettings({ vibration: v })} />
           </Row>
+          {noVibrationSupport && (
+            <p className="px-3 pb-2 text-xs leading-relaxed text-muted-foreground">
+              iPhone and iPad browsers block web vibration, so haptics stay silent here. Keep sound on for
+              feedback - buzzing will arrive with the native app.
+            </p>
+          )}
           <Row label="Diya-lit mode" hint="Dark theme for low light">
             <Switch checked={s.dark} onCheckedChange={(v) => updateSettings({ dark: v })} />
           </Row>
