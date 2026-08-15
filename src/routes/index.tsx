@@ -20,10 +20,10 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "A calm, offline mala bead counter for your daily spiritual practice.",
       },
-      { property: "og:url", content: "https://mala-spirit-counter.lovable.app/" },
+      { property: "og:url", content: "/" },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "https://mala-spirit-counter.lovable.app/" }],
+    links: [{ rel: "canonical", href: "/" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/")({
           operatingSystem: "Web, iOS, Android",
           description:
             "An offline mala bead counter for daily japa: tap the bead, track malas, lifetime jaaps and daily streaks.",
-          url: "https://mala-spirit-counter.lovable.app/",
+          url: "/",
           offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
         }),
       },
@@ -54,7 +54,7 @@ function CounterScreen() {
       <MandalaBackground />
 
       <header className="relative flex w-full max-w-md items-center justify-between">
-        <h1 className="font-display text-xl tracking-wide text-foreground">Mala Jaap</h1>
+        <h1 className="font-display text-xl tracking-wide text-foreground">Mala Jaap Counter</h1>
         <div className="flex items-center gap-1">
           <Link
             to="/stats"
