@@ -6,7 +6,7 @@ import { useMala } from "@/hooks/useMala";
 import { BEAD_THEMES, MALA_LENGTHS } from "@/lib/mala";
 import { Switch } from "@/components/ui/switch";
 import { requestReminderPermission, syncNativeReminder } from "@/lib/reminder";
-import { getAudioState, subscribeAudioState, unlockAudio, type AudioState } from "@/lib/feedback";
+import { getAudioState, playChime, subscribeAudioState, unlockAudio, type AudioState } from "@/lib/feedback";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -100,10 +100,22 @@ function SettingsScreen() {
             label={
               <span className="inline-flex items-center gap-2">
                 Sound
-                {s.sound && audioState !== "ready" && audioState !== "unsupported" && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[0.65rem] font-medium text-amber-600 dark:text-amber-400">
+                {s.sound && (
+                  <span
+                    className={
+                      audioState === "ready"
+                        ? "inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[0.65rem] font-medium text-emerald-600 dark:text-emerald-400"
+                        : "inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[0.65rem] font-medium text-amber-600 dark:text-amber-400"
+                    }
+                  >
                     <Volume2 className="h-3 w-3" />
-                    {audioState === "blocked" ? "Blocked" : "Tap to enable"}
+                    {audioState === "ready"
+                      ? "Ready"
+                      : audioState === "blocked"
+                        ? "Blocked"
+                        : audioState === "unsupported"
+                          ? "Unsupported"
+                          : "Tap to enable"}
                   </span>
                 )}
               </span>
@@ -118,7 +130,7 @@ function SettingsScreen() {
               }}
             />
           </Row>
-          {s.sound && audioState !== "ready" && (
+          {s.sound && (
             <div className="mx-3 mb-3 flex gap-2 rounded-xl bg-secondary/60 p-3">
               <Info className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
               <div className="space-y-2">
@@ -127,21 +139,27 @@ function SettingsScreen() {
                     ? "This browser does not support web audio, so the bead click and chime stay silent."
                     : audioState === "blocked"
                       ? "Your browser is blocking playback. Check the silent switch and volume on iPhone, then tap Enable sound again."
-                      : "iPhone and iPad need one tap before sound can play. Tap the button below or your first bead to enable it."}
+                      : audioState === "ready"
+                        ? "Sound is enabled on this device. Tap Test sound to hear the completion chime."
+                        : "iPhone and iPad need one tap before sound can play. Tap the button below or your first bead to enable it."}
                 </p>
                 {audioState !== "unsupported" && (
                   <button
                     type="button"
-                    onClick={() => unlockAudio()}
+                    onClick={() => {
+                      unlockAudio();
+                      playChime();
+                    }}
                     className="inline-flex items-center gap-2 rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground"
                   >
                     <Volume2 className="h-3.5 w-3.5" />
-                    Enable sound
+                    {audioState === "ready" ? "Test sound" : "Enable sound"}
                   </button>
                 )}
               </div>
             </div>
           )}
+
           <Row
             label={
               <span className="inline-flex items-center gap-2">
