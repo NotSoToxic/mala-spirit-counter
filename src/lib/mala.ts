@@ -49,14 +49,14 @@ export function todayKey(d = new Date()): string {
 
 export function shiftDay(key: string, days: number): string {
   const [y, m, d] = key.split("-").map(Number);
-  const date = new Date(y, (m ?? 1) - 1, d);
+  const date = new Date(y ?? 1970, (m ?? 1) - 1, d ?? 1);
   date.setDate(date.getDate() + days);
   return todayKey(date);
 }
 
 export function formatDay(key: string): string {
   const [y, m, d] = key.split("-").map(Number);
-  return new Date(y, (m ?? 1) - 1, d).toLocaleDateString(undefined, {
+  return new Date(y ?? 1970, (m ?? 1) - 1, d ?? 1).toLocaleDateString(undefined, {
     weekday: "short",
     day: "numeric",
     month: "short",
