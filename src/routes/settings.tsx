@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Info, Smartphone } from "lucide-react";
 import { MandalaBackground } from "@/components/MandalaBackground";
 import { useMala } from "@/hooks/useMala";
 import { BEAD_THEMES, MALA_LENGTHS } from "@/lib/mala";
