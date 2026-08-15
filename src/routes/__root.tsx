@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { registerAppServiceWorker } from "../lib/pwa";
 import { initNativeShell } from "../lib/native";
+import { initAudioUnlock } from "../lib/feedback";
 import { PageTransition } from "../components/PageTransition";
 import { ReminderWatcher } from "../components/ReminderWatcher";
 
@@ -137,6 +138,7 @@ function RootComponent() {
   useEffect(() => {
     registerAppServiceWorker();
     initNativeShell();
+    initAudioUnlock();
   }, []);
 
 
