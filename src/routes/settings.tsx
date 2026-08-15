@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 import { MandalaBackground } from "@/components/MandalaBackground";
@@ -44,7 +44,14 @@ function SettingsScreen() {
   const { data, updateSettings, resetAll } = useMala();
   const [confirming, setConfirming] = useState(false);
   const [reminderBlocked, setReminderBlocked] = useState(false);
+  const [noVibrationSupport, setNoVibrationSupport] = useState(false);
   const s = data.settings;
+
+  useEffect(() => {
+    const isNative = typeof window !== "undefined" && Boolean((window as any).Capacitor?.isNativePlatform?.());
+    if (isNative) return;
+    setNoVibrationSupport(typeof navigator !== "undefined" && !("vibrate" in navigator));
+  }, []);
 
   const toggleReminder = async (on: boolean) => {
     if (!on) {
@@ -86,6 +93,12 @@ function SettingsScreen() {
           <Row label="Vibration" hint="Gentle haptic on each jaap">
             <Switch checked={s.vibration} onCheckedChange={(v) => updateSettings({ vibration: v })} />
           </Row>
+          {noVibrationSupport && (
+            <p className="px-3 pb-2 text-xs leading-relaxed text-muted-foreground">
+              iPhone and iPad browsers block web vibration, so haptics stay silent here. Keep sound on for
+              feedback - buzzing will arrive with the native app.
+            </p>
+          )}
           <Row label="Diya-lit mode" hint="Dark theme for low light">
             <Switch checked={s.dark} onCheckedChange={(v) => updateSettings({ dark: v })} />
           </Row>
