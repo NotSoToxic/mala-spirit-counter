@@ -44,7 +44,14 @@ function SettingsScreen() {
   const { data, updateSettings, resetAll } = useMala();
   const [confirming, setConfirming] = useState(false);
   const [reminderBlocked, setReminderBlocked] = useState(false);
+  const [noVibrationSupport, setNoVibrationSupport] = useState(false);
   const s = data.settings;
+
+  useEffect(() => {
+    const isNative = typeof window !== "undefined" && Boolean((window as any).Capacitor?.isNativePlatform?.());
+    if (isNative) return;
+    setNoVibrationSupport(typeof navigator !== "undefined" && !("vibrate" in navigator));
+  }, []);
 
   const toggleReminder = async (on: boolean) => {
     if (!on) {
