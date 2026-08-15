@@ -1,4 +1,4 @@
-# Mala Jaap Counter — Plan
+# Mala Jaap Counter - Plan
 
 A calm, devotional bead-counting companion. Fully offline, no accounts, all data stored on the device.
 
@@ -26,12 +26,12 @@ A calm, devotional bead-counting companion. Fully offline, no accounts, all data
 
 ## Design
 
-Warm devotional palette — deep maroon, saffron, warm gold, cream; dark mode in deep brown/black with gold. Elegant serif for numbers/headings, soft sans for body. Subtle mandala/lotus background motifs at low opacity. All colors added as semantic tokens in `src/styles.css`; no hardcoded color utilities.
+Warm devotional palette - deep maroon, saffron, warm gold, cream; dark mode in deep brown/black with gold. Elegant serif for numbers/headings, soft sans for body. Subtle mandala/lotus background motifs at low opacity. All colors added as semantic tokens in `src/styles.css`; no hardcoded color utilities.
 
 ## Technical
 
 - Routes: `src/routes/index.tsx` (counter), `stats.tsx`, `settings.tsx`, each with its own head metadata.
-- State: one `useMala` hook over localStorage — current count, lifetime jaaps, lifetime malas, per-date history map, streak dates, settings. Written on every change, read once on mount (hydration-safe).
+- State: one `useMala` hook over localStorage - current count, lifetime jaaps, lifetime malas, per-date history map, streak dates, settings. Written on every change, read once on mount (hydration-safe).
 - Animation: Motion for React (press/bounce, ring fill, completion burst, route transitions).
 - Sound: small Web Audio chime generated in-code (no asset download), gated by the sound toggle. Vibration via `navigator.vibrate` when supported.
 - Hardware volume keys are not accessible to web apps on Android/iOS; skipping that gracefully, tap and undo remain the interaction.

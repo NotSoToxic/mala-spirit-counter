@@ -8,7 +8,7 @@ import { currentStreak, formatDay, lastNDays, longestStreak } from "@/lib/mala";
 export const Route = createFileRoute("/stats")({
   head: () => ({
     meta: [
-      { title: "Your Japa Journey — Mala Jaap Counter" },
+      { title: "Your Japa Journey - Mala Jaap Counter" },
       {
         name: "description",
         content: "Day-wise mala and jaap history, lifetime totals, current streak and longest streak.",
@@ -57,7 +57,7 @@ function StatsScreen() {
             {days.map((d) => (
               <motion.div
                 key={d.key}
-                title={`${formatDay(d.key)} — ${d.entry.jaaps} jaaps`}
+                title={`${formatDay(d.key)} - ${d.entry.jaaps} jaaps`}
                 className="flex-1 rounded-t bg-accent/70"
                 initial={{ height: 0 }}
                 animate={{ height: `${Math.max(3, (d.entry.jaaps / max) * 100)}%` }}

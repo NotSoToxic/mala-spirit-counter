@@ -20,7 +20,7 @@ import {
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
-      { title: "Settings — Mala Jaap Counter" },
+      { title: "Settings - Mala Jaap Counter" },
       {
         name: "description",
         content: "Choose your bead, mala length, sound, vibration and diya-lit dark mode.",
@@ -164,7 +164,7 @@ function SettingsScreen() {
         <section className="space-y-2 pt-2 text-center">
           <p className="text-xs leading-relaxed text-muted-foreground">
             Your counts, malas, streaks and history are stored only in this device&apos;s local
-            cache — never on a server. Clearing site data or uninstalling the app erases them
+            cache - never on a server. Clearing site data or uninstalling the app erases them
             permanently.
           </p>
           <p className="text-xs text-muted-foreground">

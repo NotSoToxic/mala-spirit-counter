@@ -5,13 +5,13 @@ import { MandalaBackground } from "@/components/MandalaBackground";
 export const Route = createFileRoute("/terms")({
   head: () => ({
     meta: [
-      { title: "Terms of Use — Mala Jaap Counter" },
+      { title: "Terms of Use - Mala Jaap Counter" },
       {
         name: "description",
         content:
           "The simple terms for using Mala Jaap Counter: a free, offline japa counter provided as-is with your data kept on your device.",
       },
-      { property: "og:title", content: "Terms of Use — Mala Jaap Counter" },
+      { property: "og:title", content: "Terms of Use - Mala Jaap Counter" },
       {
         property: "og:description",
         content: "Simple, plain-language terms for this free offline mala counter.",
@@ -48,7 +48,7 @@ function TermsScreen() {
 
           <Section title="Your data is yours">
             All counts, history and settings stay in your device&apos;s local storage. You are
-            responsible for keeping your device — if you clear the app&apos;s cache, reinstall, or
+            responsible for keeping your device - if you clear the app&apos;s cache, reinstall, or
             use a different device or browser, your history will not be there.
           </Section>
 
