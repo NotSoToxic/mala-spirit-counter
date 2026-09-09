@@ -33,6 +33,9 @@ function StatsScreen() {
   const days = lastNDays(data.history, 30);
   const max = Math.max(1, ...days.map((d) => d.entry.jaaps));
   const recent = [...days].reverse().filter((d) => d.entry.jaaps > 0);
+  const totalMinutes = Object.values(data.history).reduce((sum, d) => sum + (d.minutes ?? 0), 0);
+  const totalHours = Math.floor(totalMinutes / 60);
+  const remainMins = totalMinutes % 60;
 
   return (
     <main className="relative min-h-screen px-5 pb-12 pt-8">
@@ -54,6 +57,13 @@ function StatsScreen() {
           <Tile label="Total malas" value={data.totalMalas} />
           <Tile label="Current streak" value={`${currentStreak(data.history)} d`} />
           <Tile label="Longest streak" value={`${longestStreak(data.history)} d`} />
+          {totalMinutes > 0 && (
+            <Tile
+              label="Practice time"
+              value={totalHours > 0 ? `${totalHours}h ${remainMins}m` : `${remainMins} min`}
+              span2
+            />
+          )}
         </div>
 
         <section className="shrine-card rounded-2xl p-4">
@@ -86,7 +96,7 @@ function StatsScreen() {
             >
               <span className="text-sm text-foreground">{formatDay(d.key)}</span>
               <span className="text-sm text-muted-foreground">
-                {d.entry.malas} malas · {d.entry.jaaps} jaaps
+                {d.entry.malas} malas · {d.entry.jaaps} jaaps{d.entry.minutes > 0 ? ` · ${d.entry.minutes} min` : ""}
               </span>
             </div>
           ))}
@@ -96,9 +106,9 @@ function StatsScreen() {
   );
 }
 
-function Tile({ label, value }: { label: string; value: string | number }) {
+function Tile({ label, value, span2 }: { label: string; value: string | number; span2?: boolean }) {
   return (
-    <div className="shrine-card rounded-2xl px-4 py-5 text-center">
+    <div className={`shrine-card rounded-2xl px-4 py-5 text-center${span2 ? " col-span-2" : ""}`}>
       <div className="font-display text-3xl text-primary">{value}</div>
       <div className="mt-1 text-[0.65rem] uppercase tracking-[0.25em] text-muted-foreground">
         {label}

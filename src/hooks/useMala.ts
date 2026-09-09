@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   defaultData,
+  emptyDay,
   loadData,
+  normalizeDay,
   saveData,
   todayKey,
   type MalaData,
@@ -9,11 +11,18 @@ import {
 } from "@/lib/mala";
 import { playChime, playTick, vibrate } from "@/lib/feedback";
 
+const IDLE_TIMEOUT_MS = 60_000; // flush session after 60 s of no taps
+
 export function useMala() {
   const [data, setData] = useState<MalaData>(defaultData);
   const [ready, setReady] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const celebTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Session timer refs (not in state — avoids re-renders every second)
+  const sessionStart = useRef<number | null>(null);
+  const lastTap = useRef<number | null>(null);
+  const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setData(loadData());
@@ -29,13 +38,56 @@ export function useMala() {
     document.documentElement.classList.toggle("dark", data.settings.dark);
   }, [ready, data.settings.dark]);
 
-  useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
+  useEffect(() => () => { if (celebTimer.current) clearTimeout(celebTimer.current); }, []);
+
+  // Clean up idle timer on unmount
+  useEffect(() => () => { if (idleTimer.current) clearTimeout(idleTimer.current); }, []);
+
+  /** Flush accumulated session seconds into today's minutes. */
+  const flushSession = useCallback(() => {
+    if (!sessionStart.current || !lastTap.current) return;
+    const elapsed = lastTap.current - sessionStart.current;
+    const mins = Math.round(elapsed / 60_000);
+    sessionStart.current = null;
+    lastTap.current = null;
+    if (mins <= 0) return;
+    setData((prev) => {
+      const key = todayKey();
+      const day = normalizeDay(prev.history[key]);
+      return {
+        ...prev,
+        history: {
+          ...prev.history,
+          [key]: { ...day, minutes: day.minutes + mins },
+        },
+      };
+    });
+  }, []);
+
+  /** Mark a tap for the session timer. Starts session on first tap, resets idle timeout. */
+  const recordTap = useCallback(() => {
+    const now = Date.now();
+    if (!sessionStart.current) sessionStart.current = now;
+    lastTap.current = now;
+    if (idleTimer.current) clearTimeout(idleTimer.current);
+    idleTimer.current = setTimeout(flushSession, IDLE_TIMEOUT_MS);
+  }, [flushSession]);
+
+  // Flush session when the page is hidden (user switches app / locks phone)
+  useEffect(() => {
+    const onVisChange = () => {
+      if (document.visibilityState === "hidden") flushSession();
+    };
+    document.addEventListener("visibilitychange", onVisChange);
+    return () => document.removeEventListener("visibilitychange", onVisChange);
+  }, [flushSession]);
 
   const increment = useCallback(() => {
+    recordTap();
     setData((prev) => {
       const { sound, vibration, malaLength } = prev.settings;
       const key = todayKey();
-      const day = prev.history[key] ?? { jaaps: 0, malas: 0 };
+      const day = normalizeDay(prev.history[key]);
       const next = prev.count + 1;
       const complete = next >= malaLength;
 
@@ -44,8 +96,8 @@ export function useMala() {
 
       if (complete) {
         setCelebrating(true);
-        if (timer.current) clearTimeout(timer.current);
-        timer.current = setTimeout(() => setCelebrating(false), 2600);
+        if (celebTimer.current) clearTimeout(celebTimer.current);
+        celebTimer.current = setTimeout(() => setCelebrating(false), 2600);
       }
 
       return {
@@ -55,18 +107,18 @@ export function useMala() {
         totalMalas: prev.totalMalas + (complete ? 1 : 0),
         history: {
           ...prev.history,
-          [key]: { jaaps: day.jaaps + 1, malas: day.malas + (complete ? 1 : 0) },
+          [key]: { ...day, jaaps: day.jaaps + 1, malas: day.malas + (complete ? 1 : 0) },
         },
       };
     });
-  }, []);
+  }, [recordTap]);
 
   const decrement = useCallback(() => {
     setData((prev) => {
       if (prev.count <= 0) return prev;
       if (prev.settings.vibration) vibrate(8);
       const key = todayKey();
-      const day = prev.history[key] ?? { jaaps: 0, malas: 0 };
+      const day = normalizeDay(prev.history[key]);
       return {
         ...prev,
         count: prev.count - 1,
@@ -89,14 +141,33 @@ export function useMala() {
     [],
   );
 
+  const setSankalpa = useCallback((text: string) => {
+    setData((prev) => {
+      const key = todayKey();
+      const day = normalizeDay(prev.history[key]);
+      return {
+        ...prev,
+        history: { ...prev.history, [key]: { ...day, sankalpa: text } },
+      };
+    });
+  }, []);
+
+  /** Active session duration in minutes (live, for display). */
+  const sessionMinutes = (() => {
+    if (!sessionStart.current || !lastTap.current) return 0;
+    return Math.round((lastTap.current - sessionStart.current) / 60_000);
+  })();
+
   return {
     data,
     ready,
     celebrating,
+    sessionMinutes,
     increment,
     decrement,
     resetRound,
     resetAll,
     updateSettings,
+    setSankalpa,
   };
 }

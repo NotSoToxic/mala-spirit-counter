@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronLeft, Info, Smartphone, Volume2 } from "lucide-react";
 import { MandalaBackground } from "@/components/MandalaBackground";
 import { useMala } from "@/hooks/useMala";
-import { BEAD_THEMES, MALA_LENGTHS } from "@/lib/mala";
+import { BEAD_THEMES, DAILY_TARGETS, MALA_LENGTHS } from "@/lib/mala";
 import { Switch } from "@/components/ui/switch";
 import { requestReminderPermission, syncNativeReminder } from "@/lib/reminder";
 import { getAudioState, playChime, subscribeAudioState, unlockAudio, type AudioState } from "@/lib/feedback";
@@ -235,6 +235,44 @@ function SettingsScreen() {
               </button>
             ))}
           </div>
+        </section>
+
+        <section className="shrine-card space-y-3 rounded-2xl p-4">
+          <h2 className="font-display text-lg text-foreground">Your Mantra</h2>
+          <input
+            type="text"
+            value={s.mantra}
+            onChange={(e) => updateSettings({ mantra: e.target.value })}
+            placeholder="e.g. Om Namah Shivaya"
+            maxLength={80}
+            className="w-full rounded-xl bg-secondary px-4 py-3 text-sm text-secondary-foreground placeholder:text-muted-foreground/50 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          />
+          <p className="text-xs text-muted-foreground">
+            Shown on the counter screen during your practice.
+          </p>
+        </section>
+
+        <section className="shrine-card space-y-3 rounded-2xl p-4">
+          <h2 className="font-display text-lg text-foreground">Daily goal</h2>
+          <div className="grid grid-cols-5 gap-2">
+            {DAILY_TARGETS.map((n) => (
+              <button
+                key={n}
+                type="button"
+                onClick={() => updateSettings({ dailyTarget: n })}
+                className={`min-h-12 rounded-xl font-display text-lg transition-colors ${
+                  s.dailyTarget === n
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-secondary text-secondary-foreground hover:bg-secondary/70"
+                }`}
+              >
+                {n === 0 ? "Off" : n}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Set a daily mala target to stay motivated. Progress appears on the counter screen.
+          </p>
         </section>
 
         <section className="shrine-card space-y-3 rounded-2xl p-4">

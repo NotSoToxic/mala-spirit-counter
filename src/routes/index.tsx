@@ -1,12 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
-import { BarChart3, Flame, RotateCcw, Settings, Undo2 } from "lucide-react";
+import { BarChart3, Check, Flame, RotateCcw, Settings, Timer, Undo2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { BeadButton } from "@/components/BeadButton";
 import { MandalaBackground } from "@/components/MandalaBackground";
 import { useMala } from "@/hooks/useMala";
-import { currentStreak, todayKey } from "@/lib/mala";
+import { currentStreak, normalizeDay, todayKey } from "@/lib/mala";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/")(
+  {
   head: () => ({
     meta: [
       { title: "Mala Jaap Counter - Offline Japa Bead Counter" },
@@ -50,9 +52,41 @@ export const Route = createFileRoute("/")({
 });
 
 function CounterScreen() {
-  const { data, ready, celebrating, increment, decrement, resetRound } = useMala();
-  const today = data.history[todayKey()] ?? { jaaps: 0, malas: 0 };
+  const { data, ready, celebrating, sessionMinutes, increment, decrement, resetRound, setSankalpa } = useMala();
+  const today = normalizeDay(data.history[todayKey()]);
   const streak = currentStreak(data.history);
+  const { mantra, dailyTarget } = data.settings;
+
+  // Daily target reached celebration (one-shot per day)
+  const [targetReached, setTargetReached] = useState(false);
+  const prevMalas = useRef(today.malas);
+  useEffect(() => {
+    if (dailyTarget > 0 && today.malas >= dailyTarget && prevMalas.current < dailyTarget) {
+      setTargetReached(true);
+      const t = setTimeout(() => setTargetReached(false), 3000);
+      return () => clearTimeout(t);
+    }
+    prevMalas.current = today.malas;
+  }, [today.malas, dailyTarget]);
+
+  // Sankalpa inline editing
+  const [editingSankalpa, setEditingSankalpa] = useState(false);
+  const [sankalpaText, setSankalpaText] = useState(today.sankalpa);
+  const sankalpaRef = useRef<HTMLInputElement>(null);
+
+  // Sync from data when day changes or on load
+  useEffect(() => {
+    setSankalpaText(today.sankalpa);
+  }, [today.sankalpa]);
+
+  useEffect(() => {
+    if (editingSankalpa && sankalpaRef.current) sankalpaRef.current.focus();
+  }, [editingSankalpa]);
+
+  const commitSankalpa = () => {
+    setEditingSankalpa(false);
+    setSankalpa(sankalpaText.trim());
+  };
 
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden px-5 pb-6 pt-8">
@@ -98,6 +132,7 @@ function CounterScreen() {
           bead={data.settings.bead}
           celebrating={celebrating}
           onTap={increment}
+          onUndo={decrement}
         />
 
         <div className="h-8">
@@ -112,24 +147,117 @@ function CounterScreen() {
               >
                 Mala Complete 🙏 - one more step on your journey
               </motion.p>
-            ) : (
+            ) : targetReached ? (
               <motion.p
+                key="target"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                className="font-display text-lg text-primary"
+              >
+                Daily goal reached 🙏
+              </motion.p>
+            ) : (
+              <motion.div
                 key="idle"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="text-sm text-muted-foreground"
+                className="flex flex-col items-center gap-0.5"
               >
-                {ready ? "Tap the bead with each mantra" : " "}
-              </motion.p>
+                <span className="text-sm text-muted-foreground">
+                  {ready ? "Tap the bead with each mantra" : " "}
+                </span>
+                {mantra && (
+                  <span className="font-display text-sm italic text-primary/80">
+                    {mantra}
+                  </span>
+                )}
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
       </div>
 
       <section className="relative w-full max-w-md space-y-4">
+        {/* Sankalpa / daily intention */}
+        <div className="flex items-center justify-center min-h-[2rem]">
+          {editingSankalpa ? (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                commitSankalpa();
+              }}
+              className="flex w-full max-w-xs items-center gap-2"
+            >
+              <input
+                ref={sankalpaRef}
+                type="text"
+                value={sankalpaText}
+                onChange={(e) => setSankalpaText(e.target.value)}
+                onBlur={commitSankalpa}
+                placeholder="Your intention for today…"
+                maxLength={120}
+                className="w-full border-b border-border bg-transparent px-1 py-1 text-center text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus-visible:border-primary"
+              />
+            </form>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setEditingSankalpa(true)}
+              className="text-center text-sm transition-colors hover:text-foreground"
+            >
+              {today.sankalpa ? (
+                <span className="italic text-foreground/80">&ldquo;{today.sankalpa}&rdquo;</span>
+              ) : (
+                <span className="text-muted-foreground/60">Set today&apos;s intention…</span>
+              )}
+            </button>
+          )}
+        </div>
+
+        {/* Daily target progress */}
+        {dailyTarget > 0 && (
+          <div className="shrine-card flex items-center gap-3 rounded-2xl px-4 py-2.5">
+            <div className="flex-1">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>Daily goal</span>
+                <span className="font-display text-sm text-foreground">
+                  {Math.min(today.malas, dailyTarget)} / {dailyTarget} malas
+                </span>
+              </div>
+              <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+                <motion.div
+                  className="h-full rounded-full bg-accent"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.min((today.malas / dailyTarget) * 100, 100)}%` }}
+                  transition={{ type: "spring", stiffness: 80, damping: 18 }}
+                />
+              </div>
+            </div>
+            {today.malas >= dailyTarget && (
+              <motion.span
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="flex h-6 w-6 items-center justify-center rounded-full bg-accent text-accent-foreground"
+              >
+                <Check className="h-3.5 w-3.5" />
+              </motion.span>
+            )}
+          </div>
+        )}
+
         <div className="shrine-card grid grid-cols-3 rounded-2xl px-2 py-3 text-center">
-          <Stat label="Today" value={`${today.malas} malas`} />
+          <Stat
+            label="Today"
+            value={`${today.malas} malas`}
+            sub={sessionMinutes > 0 || today.minutes > 0 ? (
+              <span className="flex items-center justify-center gap-1 text-[0.6rem] text-muted-foreground">
+                <Timer className="h-3 w-3" />
+                {today.minutes + sessionMinutes} min
+              </span>
+            ) : undefined}
+          />
           <Stat label="Lifetime" value={`${data.totalMalas} malas`} />
           <Stat
             label="Streak"
@@ -184,7 +312,7 @@ function CounterScreen() {
   );
 }
 
-function Stat({ label, value, icon }: { label: string; value: string; icon?: React.ReactNode }) {
+function Stat({ label, value, icon, sub }: { label: string; value: string; icon?: React.ReactNode; sub?: React.ReactNode }) {
   return (
     <div className="flex flex-col items-center gap-0.5">
       <span className="text-[0.65rem] uppercase tracking-[0.25em] text-muted-foreground">{label}</span>
@@ -192,6 +320,7 @@ function Stat({ label, value, icon }: { label: string; value: string; icon?: Rea
         {icon}
         {value}
       </span>
+      {sub}
     </div>
   );
 }

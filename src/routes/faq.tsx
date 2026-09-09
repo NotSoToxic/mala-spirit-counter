@@ -21,12 +21,32 @@ const FAQS = [
   {
     question: "Can I change the mala length?",
     answer:
-      "Yes. Open Settings and choose a mala length that matches your practice - 108, 54, 27 or 111 beads.",
+      "Yes. Open Settings and choose a mala length that matches your practice - 108, 54, 27 or 1008 beads.",
   },
   {
     question: "What happens when I complete one mala?",
     answer:
       "The app plays a gentle chime and haptic burst, then starts a fresh round automatically while adding one mala to your daily and lifetime totals.",
+  },
+  {
+    question: "Can I name my mantra?",
+    answer:
+      "Yes. In Settings, type the name of the mantra you are chanting. It will appear on the counter screen during your practice so you stay focused on your chosen chant.",
+  },
+  {
+    question: "What is the daily intention?",
+    answer:
+      "The daily intention (sankalpa) is a short personal resolve you set each day before beginning your practice. Tap 'Set today's intention' on the counter screen. It is editable throughout the day and stored only on your device.",
+  },
+  {
+    question: "How does the daily goal work?",
+    answer:
+      "In Settings, set a target number of malas to complete each day (e.g. 3 or 5). A progress bar on the counter screen shows how close you are to your goal, and a brief congratulatory message appears when you reach it.",
+  },
+  {
+    question: "Does the app track my practice time?",
+    answer:
+      "Yes. The app automatically times your practice sessions. When you start tapping, a session begins, and after a minute of inactivity the elapsed time is saved to your daily record. Total practice time appears on the stats page.",
   },
   {
     question: "Can I set a daily reminder?",
