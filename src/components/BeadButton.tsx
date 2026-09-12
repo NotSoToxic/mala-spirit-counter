@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useTransform, type PanInfo } from "motion/react";
-import type { BeadTheme } from "@/lib/mala";
+import { BEAD_THEMES, type BeadTheme } from "@/lib/mala";
 
 type Props = {
   count: number;
@@ -40,6 +40,7 @@ const PARTICLE_SHAPES: Record<BeadTheme, { d: string; viewBox: string }> = {
 
 export function BeadButton({ count, length, bead, celebrating, onTap, onUndo }: Props) {
   const progress = Math.min(count / length, 1);
+  const beadImage = BEAD_THEMES.find((t) => t.id === bead)?.image ?? BEAD_THEMES[0].image;
 
   // Swipe-to-undo tracking
   const dragY = useMotionValue(0);
@@ -124,7 +125,7 @@ export function BeadButton({ count, length, bead, celebrating, onTap, onUndo }: 
         onPan={handlePan}
         onPanEnd={handlePanEnd}
         aria-label="Count one jaap"
-        className="bead-surface relative flex h-[min(58vw,16rem)] w-[min(58vw,16rem)] select-none items-center justify-center rounded-full outline-none focus-visible:ring-4 focus-visible:ring-ring/60"
+        className="bead-surface relative flex h-[min(58vw,16rem)] w-[min(58vw,16rem)] select-none items-center justify-center rounded-full outline-none focus-visible:ring-4 focus-visible:ring-ring/60 overflow-hidden"
         whileTap={{ scale: 0.93 }}
         animate={{
           scale: celebrating ? [1, 1.06, 1] : [1, 1.015, 1],
@@ -138,7 +139,15 @@ export function BeadButton({ count, length, bead, celebrating, onTap, onUndo }: 
             : { duration: 4.5, repeat: Infinity, ease: "easeInOut" },
         }}
       >
-        <span className="pointer-events-none flex flex-col items-center">
+        {/* Bead photo layered with multiply blend — white bg becomes transparent */}
+        <img
+          src={beadImage}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 h-full w-full rounded-full object-cover"
+          style={{ mixBlendMode: "multiply" }}
+        />
+        <span className="pointer-events-none relative flex flex-col items-center">
           <span className="font-display text-6xl font-semibold leading-none text-primary-foreground drop-shadow-md sm:text-7xl">
             {count}
           </span>

@@ -227,10 +227,23 @@ function SettingsScreen() {
                 onClick={() => updateSettings({ bead: t.id })}
                 data-bead={t.id}
                 className={`flex flex-col items-center gap-2 rounded-xl py-3 transition-colors ${
-                  s.bead === t.id ? "bg-secondary" : "hover:bg-secondary/60"
+                  s.bead === t.id ? "bg-secondary ring-2 ring-primary" : "hover:bg-secondary/60"
                 }`}
               >
-                <span className="bead-surface h-10 w-10 rounded-full" />
+                <span className="relative h-12 w-12">
+                  <img
+                    src={t.image}
+                    alt={`${t.label} bead`}
+                    className="h-12 w-12 rounded-full object-cover shadow-md"
+                  />
+                  {s.bead === t.id && (
+                    <span className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3.5 8.5L6.5 11.5L12.5 5.5" />
+                      </svg>
+                    </span>
+                  )}
+                </span>
                 <span className="text-[0.65rem] text-muted-foreground">{t.label}</span>
               </button>
             ))}
@@ -245,7 +258,7 @@ function SettingsScreen() {
             onChange={(e) => updateSettings({ mantra: e.target.value })}
             placeholder="e.g. Om Namah Shivaya"
             maxLength={80}
-            className="w-full rounded-xl bg-secondary px-4 py-3 text-sm text-secondary-foreground placeholder:text-muted-foreground/50 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="w-full rounded-xl bg-secondary px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
           />
           <p className="text-xs text-muted-foreground">
             Shown on the counter screen during your practice.

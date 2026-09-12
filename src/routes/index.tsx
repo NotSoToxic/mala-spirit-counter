@@ -181,7 +181,7 @@ function CounterScreen() {
 
       <section className="relative w-full max-w-md space-y-4">
         {/* Sankalpa / daily intention */}
-        <div className="flex items-center justify-center min-h-[2rem]">
+        <div className="flex items-center justify-center min-h-8">
           {editingSankalpa ? (
             <form
               onSubmit={(e) => {
@@ -198,7 +198,7 @@ function CounterScreen() {
                 onBlur={commitSankalpa}
                 placeholder="Your intention for today…"
                 maxLength={120}
-                className="w-full border-b border-border bg-transparent px-1 py-1 text-center text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus-visible:border-primary"
+                className="w-full border-b border-transparent bg-transparent px-1 py-1 text-center text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus-visible:border-primary"
               />
             </form>
           ) : (
