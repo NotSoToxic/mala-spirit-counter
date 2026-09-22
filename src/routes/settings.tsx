@@ -7,6 +7,7 @@ import { useMala } from "@/hooks/useMala";
 import { BEAD_THEMES, DAILY_TARGETS, MALA_LENGTHS } from "@/lib/mala";
 import { Switch } from "@/components/ui/switch";
 import { isNative } from "@/lib/native";
+import { cn } from "@/lib/utils";
 import { requestReminderPermission, syncNativeReminder } from "@/lib/reminder";
 import {
   getAudioState,
@@ -111,8 +112,16 @@ function SettingsScreen() {
                   <span
                     className={
                       audioState === "ready"
-                        ? "inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[0.65rem] font-medium text-emerald-600 dark:text-emerald-400"
-                        : "inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[0.65rem] font-medium text-amber-600 dark:text-amber-400"
+                        ? cn(
+                            "inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[0.65rem] font-medium",
+                            "text-emerald-600",
+                            "dark:text-emerald-400",
+                          )
+                        : cn(
+                            "inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[0.65rem] font-medium",
+                            "text-amber-600",
+                            "dark:text-amber-400",
+                          )
                     }
                   >
                     <Volume2 className="h-3 w-3" />
@@ -172,7 +181,13 @@ function SettingsScreen() {
               <span className="inline-flex items-center gap-2">
                 Vibration
                 {noVibrationSupport && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[0.65rem] font-medium text-amber-600 dark:text-amber-400">
+                  <span
+                    className={cn(
+                      "inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[0.65rem] font-medium",
+                      "text-amber-600",
+                      "dark:text-amber-400",
+                    )}
+                  >
                     <Smartphone className="h-3 w-3" />
                     iOS unsupported
                   </span>
@@ -278,7 +293,11 @@ function SettingsScreen() {
             onChange={(e) => updateSettings({ mantra: e.target.value })}
             placeholder="e.g. Om Namah Shivaya"
             maxLength={80}
-            className="w-full rounded-xl bg-secondary px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className={cn(
+              "w-full rounded-xl bg-secondary px-4 py-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              "text-foreground",
+              "placeholder:text-muted-foreground",
+            )}
           />
           <p className="text-xs text-muted-foreground">
             Shown on the counter screen during your practice.

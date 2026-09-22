@@ -33,7 +33,14 @@ export default defineConfig(({ command }) => ({
             process.env.NITRO_PRESET
               ? { preset: process.env.NITRO_PRESET }
               : process.env.VERCEL
-                ? { preset: "vercel" }
+                ? {
+                    preset: "vercel",
+                    vercel: {
+                      functions: {
+                        runtime: "nodejs22.x",
+                      },
+                    },
+                  }
                 : { preset: "cloudflare-module" },
           ),
         ]

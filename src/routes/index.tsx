@@ -7,6 +7,7 @@ import { MandalaBackground } from "@/components/MandalaBackground";
 import { useMala } from "@/hooks/useMala";
 import { currentStreak, normalizeDay, todayKey } from "@/lib/mala";
 import { SITE_URL } from "@/lib/site";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -205,7 +206,11 @@ function CounterScreen() {
                 onBlur={commitSankalpa}
                 placeholder="Your intention for today…"
                 maxLength={120}
-                className="w-full border-b border-transparent bg-transparent px-1 py-1 text-center text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus-visible:border-primary"
+                className={cn(
+                  "w-full border-b bg-transparent px-1 py-1 text-center text-sm outline-none",
+                  "border-transparent focus-visible:border-primary",
+                  "text-foreground placeholder:text-muted-foreground/50",
+                )}
               />
             </form>
           ) : (
