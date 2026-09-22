@@ -1,16 +1,7 @@
 const SW_URL = "/sw.js";
 
 function isPreviewHost(host: string) {
-  return (
-    host.startsWith("id-preview--") ||
-    host.startsWith("preview--") ||
-    host === "lovableproject.com" ||
-    host.endsWith(".lovableproject.com") ||
-    host === "lovableproject-dev.com" ||
-    host.endsWith(".lovableproject-dev.com") ||
-    host === "beta.lovable.dev" ||
-    host.endsWith(".beta.lovable.dev")
-  );
+  return host.startsWith("id-preview--") || host.startsWith("preview--");
 }
 
 async function unregisterAppSw() {

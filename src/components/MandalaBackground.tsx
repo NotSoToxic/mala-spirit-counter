@@ -21,7 +21,15 @@ export function MandalaBackground() {
           />
         ))}
         {[60, 105, 150, 185].map((r) => (
-          <circle key={r} cx="200" cy="200" r={r} fill="none" stroke="currentColor" strokeWidth="0.75" />
+          <circle
+            key={r}
+            cx="200"
+            cy="200"
+            r={r}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.75"
+          />
         ))}
       </svg>
     </div>

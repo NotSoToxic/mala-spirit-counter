@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 import { MandalaBackground } from "@/components/MandalaBackground";
+import { SITE_URL } from "@/lib/site";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
@@ -16,15 +17,15 @@ export const Route = createFileRoute("/privacy")({
         property: "og:description",
         content: "Your japa data never leaves your device. No accounts, no analytics, no ads.",
       },
-      { property: "og:url", content: "https://mala-spirit-counter.lovable.app/privacy" },
-      { property: "og:image", content: "https://mala-spirit-counter.lovable.app/og/privacy.png" },
+      { property: "og:url", content: `${SITE_URL}/privacy` },
+      { property: "og:image", content: `${SITE_URL}/og/privacy.png` },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://mala-spirit-counter.lovable.app/og/privacy.png" },
+      { name: "twitter:image", content: `${SITE_URL}/og/privacy.png` },
       { property: "og:type", content: "article" },
     ],
-    links: [{ rel: "canonical", href: "https://mala-spirit-counter.lovable.app/privacy" }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/privacy` }],
   }),
   component: PrivacyScreen,
 });
@@ -69,8 +70,8 @@ function PrivacyScreen() {
 
           <Section title="Clearing your data">
             You are always in control. Use “Reset all data” in Settings, or clear your browser site
-            data / uninstall the app, and everything is gone permanently. Because the data lives only
-            in this device&apos;s cache, it cannot be recovered afterwards and it does not sync
+            data / uninstall the app, and everything is gone permanently. Because the data lives
+            only in this device&apos;s cache, it cannot be recovered afterwards and it does not sync
             between devices.
           </Section>
 

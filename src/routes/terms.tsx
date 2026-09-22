@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 import { MandalaBackground } from "@/components/MandalaBackground";
+import { SITE_URL } from "@/lib/site";
 
 export const Route = createFileRoute("/terms")({
   head: () => ({
@@ -16,15 +17,15 @@ export const Route = createFileRoute("/terms")({
         property: "og:description",
         content: "Simple, plain-language terms for this free offline mala counter.",
       },
-      { property: "og:url", content: "https://mala-spirit-counter.lovable.app/terms" },
-      { property: "og:image", content: "https://mala-spirit-counter.lovable.app/og/terms.png" },
+      { property: "og:url", content: `${SITE_URL}/terms` },
+      { property: "og:image", content: `${SITE_URL}/og/terms.png` },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://mala-spirit-counter.lovable.app/og/terms.png" },
+      { name: "twitter:image", content: `${SITE_URL}/og/terms.png` },
       { property: "og:type", content: "article" },
     ],
-    links: [{ rel: "canonical", href: "https://mala-spirit-counter.lovable.app/terms" }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/terms` }],
   }),
   component: TermsScreen,
 });
@@ -59,8 +60,8 @@ function TermsScreen() {
 
           <Section title="No warranty">
             The app is provided “as is”, without warranties of any kind. Counts, streaks and
-            reminders may be affected by device settings, storage limits or browser behaviour, and we
-            cannot guarantee uninterrupted or error-free operation.
+            reminders may be affected by device settings, storage limits or browser behaviour, and
+            we cannot guarantee uninterrupted or error-free operation.
           </Section>
 
           <Section title="Limitation of liability">

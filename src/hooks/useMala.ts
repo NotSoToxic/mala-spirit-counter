@@ -38,10 +38,20 @@ export function useMala() {
     document.documentElement.classList.toggle("dark", data.settings.dark);
   }, [ready, data.settings.dark]);
 
-  useEffect(() => () => { if (celebTimer.current) clearTimeout(celebTimer.current); }, []);
+  useEffect(
+    () => () => {
+      if (celebTimer.current) clearTimeout(celebTimer.current);
+    },
+    [],
+  );
 
   // Clean up idle timer on unmount
-  useEffect(() => () => { if (idleTimer.current) clearTimeout(idleTimer.current); }, []);
+  useEffect(
+    () => () => {
+      if (idleTimer.current) clearTimeout(idleTimer.current);
+    },
+    [],
+  );
 
   /** Flush accumulated session seconds into today's minutes. */
   const flushSession = useCallback(() => {
@@ -91,7 +101,13 @@ export function useMala() {
       const next = prev.count + 1;
       const complete = next >= malaLength;
 
-      if (sound) complete ? playChime() : playTick();
+      if (sound) {
+        if (complete) {
+          playChime();
+        } else {
+          playTick();
+        }
+      }
       if (vibration) vibrate(complete ? [30, 60, 30, 60, 120] : 12);
 
       if (complete) {

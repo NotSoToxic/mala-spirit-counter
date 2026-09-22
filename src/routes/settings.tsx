@@ -2,11 +2,19 @@ import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronLeft, Info, Smartphone, Volume2 } from "lucide-react";
 import { MandalaBackground } from "@/components/MandalaBackground";
+import { SITE_URL } from "@/lib/site";
 import { useMala } from "@/hooks/useMala";
 import { BEAD_THEMES, DAILY_TARGETS, MALA_LENGTHS } from "@/lib/mala";
 import { Switch } from "@/components/ui/switch";
+import { isNative } from "@/lib/native";
 import { requestReminderPermission, syncNativeReminder } from "@/lib/reminder";
-import { getAudioState, playChime, subscribeAudioState, unlockAudio, type AudioState } from "@/lib/feedback";
+import {
+  getAudioState,
+  playChime,
+  subscribeAudioState,
+  unlockAudio,
+  type AudioState,
+} from "@/lib/feedback";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,15 +36,15 @@ export const Route = createFileRoute("/settings")({
       },
       { property: "og:title", content: "Mala Jaap Settings" },
       { property: "og:description", content: "Personalise your bead, mala length and feedback." },
-      { property: "og:url", content: "https://mala-spirit-counter.lovable.app/settings" },
-      { property: "og:image", content: "https://mala-spirit-counter.lovable.app/og/settings.png" },
+      { property: "og:url", content: `${SITE_URL}/settings` },
+      { property: "og:image", content: `${SITE_URL}/og/settings.png` },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://mala-spirit-counter.lovable.app/og/settings.png" },
+      { name: "twitter:image", content: `${SITE_URL}/og/settings.png` },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "https://mala-spirit-counter.lovable.app/settings" }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/settings` }],
   }),
   component: SettingsScreen,
 });
@@ -50,8 +58,7 @@ function SettingsScreen() {
   const s = data.settings;
 
   useEffect(() => {
-    const isNative = typeof window !== "undefined" && Boolean((window as any).Capacitor?.isNativePlatform?.());
-    if (isNative) return;
+    if (isNative()) return;
     setNoVibrationSupport(typeof navigator !== "undefined" && !("vibrate" in navigator));
   }, []);
 
@@ -174,14 +181,18 @@ function SettingsScreen() {
             }
             hint="Gentle haptic on each jaap"
           >
-            <Switch checked={s.vibration} onCheckedChange={(v) => updateSettings({ vibration: v })} />
+            <Switch
+              checked={s.vibration}
+              onCheckedChange={(v) => updateSettings({ vibration: v })}
+            />
           </Row>
           {noVibrationSupport && (
             <div className="mx-3 mb-3 flex gap-2 rounded-xl bg-secondary/60 p-3">
               <Info className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
               <p className="text-xs leading-relaxed text-muted-foreground">
-                iPhone and iPad browsers do not allow web apps to vibrate, so haptics stay silent here.
-                Keep sound on for feedback - real device buzzing will arrive with the native app.
+                iPhone and iPad browsers do not allow web apps to vibrate, so haptics stay silent
+                here. Keep sound on for feedback - real device buzzing will arrive with the native
+                app.
               </p>
             </div>
           )}
@@ -238,7 +249,16 @@ function SettingsScreen() {
                   />
                   {s.bead === t.id && (
                     <span className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        stroke="white"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
                         <path d="M3.5 8.5L6.5 11.5L12.5 5.5" />
                       </svg>
                     </span>

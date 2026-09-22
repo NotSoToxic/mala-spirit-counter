@@ -260,8 +260,12 @@
 }
 
 @utility bead-surface {
-  background:
-    radial-gradient(circle at 32% 26%, var(--bead-hi) 0%, var(--bead-core) 46%, var(--bead-edge) 100%);
+  background: radial-gradient(
+    circle at 32% 26%,
+    var(--bead-hi) 0%,
+    var(--bead-core) 46%,
+    var(--bead-edge) 100%
+  );
   box-shadow:
     var(--shadow-bead),
     inset 0 -14px 30px color-mix(in oklab, var(--bead-edge) 70%, transparent),
@@ -273,4 +277,3 @@
   border: 1px solid color-mix(in oklab, var(--border) 90%, transparent);
   backdrop-filter: blur(10px);
 }
-

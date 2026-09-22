@@ -6,9 +6,9 @@ import { BeadButton } from "@/components/BeadButton";
 import { MandalaBackground } from "@/components/MandalaBackground";
 import { useMala } from "@/hooks/useMala";
 import { currentStreak, normalizeDay, todayKey } from "@/lib/mala";
+import { SITE_URL } from "@/lib/site";
 
-export const Route = createFileRoute("/")(
-  {
+export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Mala Jaap Counter - Offline Japa Bead Counter" },
@@ -22,15 +22,15 @@ export const Route = createFileRoute("/")(
         property: "og:description",
         content: "A calm, offline mala bead counter for your daily spiritual practice.",
       },
-      { property: "og:url", content: "https://mala-spirit-counter.lovable.app/" },
-      { property: "og:image", content: "https://mala-spirit-counter.lovable.app/og/home.png" },
+      { property: "og:url", content: `${SITE_URL}/` },
+      { property: "og:image", content: `${SITE_URL}/og/home.png` },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://mala-spirit-counter.lovable.app/og/home.png" },
+      { name: "twitter:image", content: `${SITE_URL}/og/home.png` },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "https://mala-spirit-counter.lovable.app/" }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/` }],
     scripts: [
       {
         type: "application/ld+json",
@@ -52,7 +52,16 @@ export const Route = createFileRoute("/")(
 });
 
 function CounterScreen() {
-  const { data, ready, celebrating, sessionMinutes, increment, decrement, resetRound, setSankalpa } = useMala();
+  const {
+    data,
+    ready,
+    celebrating,
+    sessionMinutes,
+    increment,
+    decrement,
+    resetRound,
+    setSankalpa,
+  } = useMala();
   const today = normalizeDay(data.history[todayKey()]);
   const streak = currentStreak(data.history);
   const { mantra, dailyTarget } = data.settings;
@@ -169,9 +178,7 @@ function CounterScreen() {
                   {ready ? "Tap the bead with each mantra" : " "}
                 </span>
                 {mantra && (
-                  <span className="font-display text-sm italic text-primary/80">
-                    {mantra}
-                  </span>
+                  <span className="font-display text-sm italic text-primary/80">{mantra}</span>
                 )}
               </motion.div>
             )}
@@ -251,12 +258,14 @@ function CounterScreen() {
           <Stat
             label="Today"
             value={`${today.malas} malas`}
-            sub={sessionMinutes > 0 || today.minutes > 0 ? (
-              <span className="flex items-center justify-center gap-1 text-[0.6rem] text-muted-foreground">
-                <Timer className="h-3 w-3" />
-                {today.minutes + sessionMinutes} min
-              </span>
-            ) : undefined}
+            sub={
+              sessionMinutes > 0 || today.minutes > 0 ? (
+                <span className="flex items-center justify-center gap-1 text-[0.6rem] text-muted-foreground">
+                  <Timer className="h-3 w-3" />
+                  {today.minutes + sessionMinutes} min
+                </span>
+              ) : undefined
+            }
           />
           <Stat label="Lifetime" value={`${data.totalMalas} malas`} />
           <Stat
@@ -312,10 +321,22 @@ function CounterScreen() {
   );
 }
 
-function Stat({ label, value, icon, sub }: { label: string; value: string; icon?: React.ReactNode; sub?: React.ReactNode }) {
+function Stat({
+  label,
+  value,
+  icon,
+  sub,
+}: {
+  label: string;
+  value: string;
+  icon?: React.ReactNode;
+  sub?: React.ReactNode;
+}) {
   return (
     <div className="flex flex-col items-center gap-0.5">
-      <span className="text-[0.65rem] uppercase tracking-[0.25em] text-muted-foreground">{label}</span>
+      <span className="text-[0.65rem] uppercase tracking-[0.25em] text-muted-foreground">
+        {label}
+      </span>
       <span className="flex items-center gap-1.5 font-display text-lg text-foreground">
         {icon}
         {value}

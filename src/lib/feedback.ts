@@ -80,7 +80,8 @@ export function initAudioUnlock() {
   window.addEventListener("touchend", handler, opts);
   window.addEventListener("keydown", handler);
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible" && ctx && ctx.state !== "running") setState("locked");
+    if (document.visibilityState === "visible" && ctx && ctx.state !== "running")
+      setState("locked");
   });
 }
 
@@ -99,7 +100,6 @@ function audio(): AudioContext | null {
   }
   return ctx;
 }
-
 
 function tone(freq: number, duration: number, gainPeak: number, delay = 0) {
   const ac = audio();

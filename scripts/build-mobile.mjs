@@ -11,6 +11,7 @@
  * Usage: npm run build:mobile
  */
 import { spawn } from "node:child_process";
+import { existsSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 
@@ -46,9 +47,17 @@ async function main() {
   await run("npx", ["vite", "build"]);
 
   console.log("→ Booting production build to snapshot pages…");
+  const wranglerConfig = [".output/server/wrangler.json", "dist/server/wrangler.json"].find(
+    existsSync,
+  );
+
+  if (!wranglerConfig) {
+    throw new Error("Could not find wrangler.json in .output/server or dist/server");
+  }
+
   const server = spawn(
     "npx",
-    ["wrangler", "dev", "--config", "dist/server/wrangler.json", "--port", String(PORT), "--ip", "127.0.0.1"],
+    ["wrangler", "dev", "--config", wranglerConfig, "--port", String(PORT), "--ip", "127.0.0.1"],
     { stdio: "ignore", shell: true, detached: true },
   );
 

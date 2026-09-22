@@ -1,11 +1,11 @@
 # Shipping Mala Jaap to the App Store & Play Store
 
 The web app is unchanged - Capacitor wraps the exact same build in a native iOS
-and Android shell. Everything below runs on your own machine, not in Lovable.
+and Android shell. Everything below runs on your local machine.
 
 ## One-time setup
 
-1. Export the project to GitHub (top-right in Lovable → GitHub), then:
+1. Clone the project repository, then:
    ```bash
    git clone <your-repo-url>
    cd <your-repo>
@@ -50,6 +50,7 @@ Edit `capacitor.config.ts` to change:
 ## Store requirements checklist
 
 **Apple ($99/year, Mac + Xcode)**
+
 - App Store Connect record, bundle ID matching `appId`
 - Icon 1024×1024, screenshots for 6.7" and 6.5" iPhones
 - Privacy policy URL and "Data Not Collected" privacy nutrition label
@@ -57,6 +58,7 @@ Edit `capacitor.config.ts` to change:
 - Archive in Xcode → Distribute App → App Store Connect
 
 **Google ($25 one-time, Android Studio)**
+
 - Play Console app, signed AAB (`Build → Generate Signed Bundle`)
 - Icon 512×512, feature graphic 1024×500, at least 2 screenshots
 - Data safety form (no data collected), content rating questionnaire

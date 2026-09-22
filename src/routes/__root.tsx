@@ -10,13 +10,11 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 import { registerAppServiceWorker } from "../lib/pwa";
 import { initNativeShell } from "../lib/native";
 import { initAudioUnlock } from "../lib/feedback";
 import { PageTransition } from "../components/PageTransition";
 import { ReminderWatcher } from "../components/ReminderWatcher";
-
 
 function NotFoundComponent() {
   return (
@@ -43,9 +41,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -87,13 +82,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content: "width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1",
       },
       { title: "Mala Jaap Counter" },
-      { name: "description", content: "A calm, offline mala bead counter for daily japa practice." },
+      {
+        name: "description",
+        content: "A calm, offline mala bead counter for daily japa practice.",
+      },
       { name: "theme-color", content: "#5b1a15" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-title", content: "Mala Jaap" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
       { property: "og:title", content: "Mala Jaap Counter" },
-      { property: "og:description", content: "A calm, offline mala bead counter for daily japa practice." },
+      {
+        property: "og:description",
+        content: "A calm, offline mala bead counter for daily japa practice.",
+      },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Mala Jaap Counter" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -140,8 +141,6 @@ function RootComponent() {
     initNativeShell();
     initAudioUnlock();
   }, []);
-
-
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -62,8 +62,18 @@ export function BeadButton({ count, length, bead, celebrating, onTap, onUndo }: 
   return (
     <div data-bead={bead} className="relative flex items-center justify-center">
       {/* progress ring */}
-      <svg viewBox="0 0 100 100" className="absolute h-[min(78vw,22rem)] w-[min(78vw,22rem)] -rotate-90">
-        <circle cx="50" cy="50" r={RADIUS} fill="none" strokeWidth="1.6" className="stroke-border" />
+      <svg
+        viewBox="0 0 100 100"
+        className="absolute h-[min(78vw,22rem)] w-[min(78vw,22rem)] -rotate-90"
+      >
+        <circle
+          cx="50"
+          cy="50"
+          r={RADIUS}
+          fill="none"
+          strokeWidth="1.6"
+          className="stroke-border"
+        />
         <motion.circle
           cx="50"
           cy="50"
@@ -85,7 +95,15 @@ export function BeadButton({ count, length, bead, celebrating, onTap, onUndo }: 
           style={{ opacity: hintOpacity }}
           aria-hidden
         >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          >
             <path d="M10 4v12M5 11l5 5 5-5" />
           </svg>
         </motion.span>

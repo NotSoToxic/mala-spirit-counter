@@ -2,8 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronLeft, Share, PlusSquare, Home, Menu, Check, Smartphone } from "lucide-react";
 import { MandalaBackground } from "@/components/MandalaBackground";
 import { useState } from "react";
+import { SITE_URL } from "@/lib/site";
 
-const BASE_URL = "https://mala-spirit-counter.lovable.app";
+const BASE_URL = SITE_URL;
 
 const IOS_STEPS = [
   {
@@ -18,12 +19,12 @@ const IOS_STEPS = [
   },
   {
     title: "Add to Home Screen",
-    body: "Scroll the share sheet and tap \"Add to Home Screen\".",
+    body: 'Scroll the share sheet and tap "Add to Home Screen".',
     icon: PlusSquare,
   },
   {
     title: "Tap Add",
-    body: "Confirm by tapping \"Add\" in the top-right corner.",
+    body: 'Confirm by tapping "Add" in the top-right corner.',
     icon: Check,
   },
   {
@@ -46,12 +47,12 @@ const ANDROID_STEPS = [
   },
   {
     title: "Add to Home Screen",
-    body: "Tap \"Add to Home Screen\" or \"Install app\" from the menu.",
+    body: 'Tap "Add to Home Screen" or "Install app" from the menu.',
     icon: PlusSquare,
   },
   {
     title: "Tap Add",
-    body: "Confirm by tapping \"Add\" or \"Install\" in the prompt.",
+    body: 'Confirm by tapping "Add" or "Install" in the prompt.',
     icon: Check,
   },
   {
@@ -153,7 +154,10 @@ function InstallScreen() {
           </PlatformTab>
         </div>
 
-        <ol className="space-y-4" aria-label={`${platform === "ios" ? "iPhone" : "Android"} install steps`}>
+        <ol
+          className="space-y-4"
+          aria-label={`${platform === "ios" ? "iPhone" : "Android"} install steps`}
+        >
           {steps.map((step, index) => (
             <li
               key={step.title}
@@ -216,9 +220,7 @@ function PlatformTab({
       type="button"
       onClick={onClick}
       className={`flex-1 rounded-xl py-2 text-sm font-medium transition-colors ${
-        active
-          ? "bg-card text-foreground shadow-sm"
-          : "text-muted-foreground hover:text-foreground"
+        active ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
       }`}
     >
       {children}

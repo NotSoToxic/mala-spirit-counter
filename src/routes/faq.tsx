@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 import { MandalaBackground } from "@/components/MandalaBackground";
+import { SITE_URL } from "@/lib/site";
 
 const FAQS = [
   {
@@ -92,15 +93,15 @@ export const Route = createFileRoute("/faq")({
         property: "og:description",
         content: "Common questions about using the offline Mala Jaap Counter app.",
       },
-      { property: "og:url", content: "https://mala-spirit-counter.lovable.app/faq" },
-      { property: "og:image", content: "https://mala-spirit-counter.lovable.app/og/faq.png" },
+      { property: "og:url", content: `${SITE_URL}/faq` },
+      { property: "og:image", content: `${SITE_URL}/og/faq.png` },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://mala-spirit-counter.lovable.app/og/faq.png" },
+      { name: "twitter:image", content: `${SITE_URL}/og/faq.png` },
       { property: "og:type", content: "article" },
     ],
-    links: [{ rel: "canonical", href: "https://mala-spirit-counter.lovable.app/faq" }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/faq` }],
     scripts: [
       {
         type: "application/ld+json",

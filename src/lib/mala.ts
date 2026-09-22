@@ -34,9 +34,19 @@ export const MALA_LENGTHS = [27, 54, 108, 1008];
 export const DAILY_TARGETS = [0, 1, 3, 5, 11] as const;
 
 export const BEAD_THEMES: { id: BeadTheme; label: string; swatch: string; image: string }[] = [
-  { id: "rudraksha", label: "Rudraksha", swatch: "var(--bead-rudraksha)", image: "/bead-rudraksha.jpg" },
+  {
+    id: "rudraksha",
+    label: "Rudraksha",
+    swatch: "var(--bead-rudraksha)",
+    image: "/bead-rudraksha.jpg",
+  },
   { id: "tulsi", label: "Tulsi", swatch: "var(--bead-tulsi)", image: "/bead-tulsi.jpg" },
-  { id: "sandalwood", label: "Sandalwood", swatch: "var(--bead-sandalwood)", image: "/bead-sandalwood.jpg" },
+  {
+    id: "sandalwood",
+    label: "Sandalwood",
+    swatch: "var(--bead-sandalwood)",
+    image: "/bead-sandalwood.jpg",
+  },
   { id: "gold", label: "Gold", swatch: "var(--bead-gold)", image: "/bead-gold.jpg" },
 ];
 

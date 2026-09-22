@@ -4,6 +4,7 @@ import { ChevronLeft } from "lucide-react";
 import { MandalaBackground } from "@/components/MandalaBackground";
 import { useMala } from "@/hooks/useMala";
 import { currentStreak, formatDay, lastNDays, longestStreak } from "@/lib/mala";
+import { SITE_URL } from "@/lib/site";
 
 export const Route = createFileRoute("/stats")({
   head: () => ({
@@ -11,19 +12,23 @@ export const Route = createFileRoute("/stats")({
       { title: "Your Japa Journey - Mala Jaap Counter" },
       {
         name: "description",
-        content: "Day-wise mala and jaap history, lifetime totals, current streak and longest streak.",
+        content:
+          "Day-wise mala and jaap history, lifetime totals, current streak and longest streak.",
       },
       { property: "og:title", content: "Your Japa Journey" },
-      { property: "og:description", content: "Lifetime totals, daily history and streaks for your japa practice." },
-      { property: "og:url", content: "https://mala-spirit-counter.lovable.app/stats" },
-      { property: "og:image", content: "https://mala-spirit-counter.lovable.app/og/stats.png" },
+      {
+        property: "og:description",
+        content: "Lifetime totals, daily history and streaks for your japa practice.",
+      },
+      { property: "og:url", content: `${SITE_URL}/stats` },
+      { property: "og:image", content: `${SITE_URL}/og/stats.png` },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://mala-spirit-counter.lovable.app/og/stats.png" },
+      { name: "twitter:image", content: `${SITE_URL}/og/stats.png` },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "https://mala-spirit-counter.lovable.app/stats" }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/stats` }],
   }),
   component: StatsScreen,
 });
@@ -96,7 +101,8 @@ function StatsScreen() {
             >
               <span className="text-sm text-foreground">{formatDay(d.key)}</span>
               <span className="text-sm text-muted-foreground">
-                {d.entry.malas} malas · {d.entry.jaaps} jaaps{d.entry.minutes > 0 ? ` · ${d.entry.minutes} min` : ""}
+                {d.entry.malas} malas · {d.entry.jaaps} jaaps
+                {d.entry.minutes > 0 ? ` · ${d.entry.minutes} min` : ""}
               </span>
             </div>
           ))}
